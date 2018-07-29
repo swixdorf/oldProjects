@@ -1,0 +1,99 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#include <windows.h>
+#include "Unit1.h"
+#pragma hdrstop
+#define EXPORT
+#include "korootkit.h"
+//#include "ntundoc.h"
+#define LIST_LoadOrder 0
+#define LIST_MemoryOrder 1
+#define LIST_InitOrder  2
+
+
+#pragma argsused
+USEFORM("Unit1.cpp", Form1);
+HINSTANCE hInstance;
+char ver[]="1.0.0.0";
+HANDLE CikisEvent;
+bool Cikis=1;
+char DLLPATH[MAX_PATH];
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
+{
+	switch (dwReason)
+	{
+	case DLL_PROCESS_ATTACH:
+				   
+			   hInstance = (HINSTANCE) hModule;
+			   GetModuleFileNameA(hInstance,DLLPATH,MAX_PATH);
+			  DllYukle();
+
+			 break;
+
+
+	case DLL_THREAD_ATTACH:  	break;
+	case DLL_THREAD_DETACH:    	break;
+	case DLL_PROCESS_DETACH:   	
+	  if(Form1!=0)
+	  {
+	  SetEvent(CikisEvent);
+
+	  Cikis=0;
+	  Sleep(2000);
+
+
+      }
+	  break;
+
+	}
+
+    return TRUE;
+}
+//---------------------------------------------------------------------------
+
+int WINAPI FormThread(PVOID Event)
+{
+  HANDLE event=Event;
+	int stle=DS_ABSALIGN | DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_CENTER | WS_CAPTION | WS_POPUP;
+	int extstle=WS_EX_OVERLAPPEDWINDOW | WS_EX_STATICEDGE;
+	GetModuleFileNameA(hInstance,DLLPATH,MAX_PATH);
+   //	ShowMessage("çaliþti");
+	Form1 =new   TForm1(NULL);
+	//Form1->Show();
+	while(Cikis)
+	{
+	Sleep(25);
+	Application->ProcessMessages();
+	if(GetKeyState(VK_F12)& 0x80000000)
+	{
+TerminateProcess(GetCurrentProcess(),NULL);
+	Sleep(100);
+	}
+
+	 }
+delete Form1;
+	return true;
+}
+ extern "C" DLL_IMEX char * GetVersiyon()
+ {
+		   return ver;
+ }
+
+ extern "C" DLL_IMEX WINAPI bool FormOlustur( void )
+{
+CikisEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+CreateThread(0,0,(LPTHREAD_START_ROUTINE)FormThread,CikisEvent,0,0);
+}
+extern "C" DLL_IMEX WINAPI bool FormGoster (void )
+{
+	if(Form1==0)
+	return false;
+   //	else
+  //	Form1->Show();
+}
+
+
+
+
+

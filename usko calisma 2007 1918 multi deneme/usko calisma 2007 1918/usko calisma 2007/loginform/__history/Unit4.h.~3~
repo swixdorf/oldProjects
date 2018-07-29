@@ -1,0 +1,97 @@
+//---------------------------------------------------------------------------
+
+#ifndef Unit4H
+#define Unit4H
+//---------------------------------------------------------------------------
+#include <Classes.hpp>
+#include <Controls.hpp>
+#include <StdCtrls.hpp>
+#include <Forms.hpp>
+#include <ComCtrls.hpp>
+#include <ScktComp.hpp>
+#include <ExtCtrls.hpp>
+#include <OleCtrls.hpp>
+#include <SHDocVw.hpp>
+//---------------------------------------------------------------------------
+class TForm4 : public TForm
+{
+__published:	// IDE-managed Components
+	TClientSocket *ClientSocket1;
+	TTimer *Timer1;
+	TTimer *Timer2;
+	TTimer *Timer3;
+	TTimer *Timer4;
+	TClientSocket *ClientSocket2;
+	TTimer *Timer6;
+	TClientSocket *ClientSocket3;
+	TClientSocket *ClientSocket4;
+	TTimer *Timer5;
+	TGroupBox *GroupBox1;
+	TLabel *Label1;
+	TLabel *Label2;
+	TEdit *Edit1;
+	TEdit *Edit2;
+	TButton *Button1;
+	TListBox *ListBox1;
+	TListBox *ListBox2;
+	TCheckBox *chinterclient;
+	TCheckBox *chload;
+	TComboBox *server;
+	TGroupBox *GroupBox2;
+	TLabel *Label3;
+	TLabel *Label4;
+	TLabel *Label5;
+	TLabel *Label6;
+	TEdit *Edit3;
+	TEdit *Edit4;
+	TEdit *Edit5;
+	TEdit *Edit6;
+	TButton *Button2;
+	TButton *Button3;
+	TButton *Button4;
+	void __fastcall Button1Click(TObject *Sender);
+	void __fastcall ClientSocket1Read(TObject *Sender, TCustomWinSocket *Socket);
+	void __fastcall Timer1Timer(TObject *Sender);
+	void __fastcall Button2Click(TObject *Sender);
+	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall ClientSocket1Error(TObject *Sender, TCustomWinSocket *Socket,
+          TErrorEvent ErrorEvent, int &ErrorCode);
+	void __fastcall ClientSocket1Connect(TObject *Sender,
+          TCustomWinSocket *Socket);
+	void __fastcall Timer2Timer(TObject *Sender);
+	void __fastcall Timer4Timer(TObject *Sender);
+	void __fastcall Timer3Timer(TObject *Sender);
+	void __fastcall Button3Click(TObject *Sender);
+	void __fastcall chloadClick(TObject *Sender);
+	void __fastcall chinterclientClick(TObject *Sender);
+	void __fastcall FormShow(TObject *Sender);
+	void __fastcall ClientSocket2Error(TObject *Sender, TCustomWinSocket *Socket, TErrorEvent ErrorEvent,
+          int &ErrorCode);
+	void __fastcall ClientSocket2Read(TObject *Sender, TCustomWinSocket *Socket);
+	void __fastcall Timer6Timer(TObject *Sender);
+	void __fastcall ClientSocket2Disconnect(TObject *Sender, TCustomWinSocket *Socket);
+	void __fastcall ClientSocket3Connect(TObject *Sender, TCustomWinSocket *Socket);
+	void __fastcall ClientSocket3Read(TObject *Sender, TCustomWinSocket *Socket);
+	void __fastcall ClientSocket4Connect(TObject *Sender, TCustomWinSocket *Socket);
+	void __fastcall Timer5Timer(TObject *Sender);
+	void __fastcall serverChange(TObject *Sender);
+	void __fastcall ClientSocket4Read(TObject *Sender, TCustomWinSocket *Socket);
+	void __fastcall ClientSocket3Error(TObject *Sender, TCustomWinSocket *Socket, TErrorEvent ErrorEvent,
+          int &ErrorCode);
+	void __fastcall ClientSocket4Error(TObject *Sender, TCustomWinSocket *Socket, TErrorEvent ErrorEvent,
+          int &ErrorCode);
+
+
+
+
+
+
+
+private:	// User declarations
+public:		// User declarations
+	__fastcall TForm4(TComponent* Owner);
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TForm4 *Form4;
+//---------------------------------------------------------------------------
+#endif

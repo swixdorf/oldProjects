@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <Transactions>
+    <Transaction>2012.12.08 08:36:23.181.cpp,C:\Users\swixdorf\Documents\RAD Studio\Projects\Unit1.cpp=C:\Users\swixdorf\Documents\RAD Studio\Projects\dosya guncelleyici\Unit1.cpp</Transaction>
+    <Transaction>2012.12.08 08:36:23.181.h,C:\Users\swixdorf\Documents\RAD Studio\Projects\Unit1.h=C:\Users\swixdorf\Documents\RAD Studio\Projects\dosya guncelleyici\Unit1.h</Transaction>
+    <Transaction>2012.12.08 08:36:23.181.dfm,C:\Users\swixdorf\Documents\RAD Studio\Projects\Unit1.dfm=C:\Users\swixdorf\Documents\RAD Studio\Projects\dosya guncelleyici\Unit1.dfm</Transaction>
+    <Transaction>2012.12.08 08:36:27.220.cbproj,C:\Users\swixdorf\Documents\RAD Studio\Projects\Project1.cbproj=C:\Users\swixdorf\Documents\RAD Studio\Projects\dosya guncelleyici\Project1.cbproj</Transaction>
+  </Transactions>
+</BorlandProject>

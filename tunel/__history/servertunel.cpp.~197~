@@ -1,0 +1,339 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#include <windows.h>
+#include <winsock.h>
+#include <stdio.h>
+#include <stdio.h>
+#include <io.h>
+#include <iostream>
+#include <iostream>
+#include <fstream>
+#include <ostream>
+
+#pragma hdrstop
+
+//---------------------------------------------------------------------------
+ #define SOCKET int
+#pragma argsused
+
+
+	tryProxyConnect()
+	{
+		SOCKET myGameSocket;
+		WSADATA wsaGameData;
+		sockaddr_in myGameAddress;
+		myGameAddress.sin_family = AF_INET;
+
+		myGameAddress.sin_addr.s_addr = inet_addr("188.132.161.211");
+		myGameAddress.sin_port = htons(15100 );
+
+	if( WSAStartup( MAKEWORD(2, 2), &wsaGameData ) != NO_ERROR )
+	{
+		//ShowMessage("girdiginiz proxy sunucusuna baglanamiyor ip port kontrol edin");
+		WSACleanup();
+		return false;
+	}
+	myGameSocket = socket( PF_INET, SOCK_STREAM, 0 );
+
+	if ( myGameSocket == INVALID_SOCKET || myGameSocket == SOCKET_ERROR )
+	{
+		//ShowMessage("girdiginiz proxy sunucusuna baglanamiyor ip port kontrol edin");
+		WSACleanup();
+		return false;
+	}
+
+	if ( connect( myGameSocket, (SOCKADDR*) &myGameAddress, sizeof( myGameAddress ) ) == SOCKET_ERROR )
+	{
+		//ShowMessage("girdiginiz proxy sunucusuna baglanamiyor ip port kontrol edin");
+		WSACleanup();
+		return false;
+	}
+	else
+	{
+
+	}
+	}
+
+
+
+
+
+class swxsocket{
+swxserver();
+CreateServer();
+};
+
+
+typedef struct {
+int index;
+	int portl;
+	char ip[20];
+	int portf;
+	char fip[20];
+	struct sockaddr_in from;
+	struct sockaddr_in to;
+	SOCKET ClientSocket;
+	SOCKET ServerSocket;
+}ServerPar;
+ServerPar Server_Par;
+BYTE IpSize;
+bool ip[250];
+bool ip2[250];
+bool ip3[250];
+//bool ip4[250];
+ CRITICAL_SECTION CriticalSection;
+
+Komut55AAIsle(BYTE *Decode_Komut,BYTE *Gidecek_Komut,WORD DecodeLen)
+{
+DWORD *TempDWord;
+WORD  *TempWord;
+TempWord = (WORD* ) Decode_Komut;
+TempWord[0]=0x55AA;
+TempWord[1]=DecodeLen;
+TempWord= (WORD*)&Decode_Komut[DecodeLen+4];
+TempWord[0]=0xAA55;
+memcpy(&Decode_Komut[4],Gidecek_Komut,DecodeLen);
+return 1 ;
+}
+AnsiString BufferToHex(char *buf,int size)
+{
+String str;
+for(int i=0;i<size;i++)
+{
+BYTE a=buf[i];
+str+="0x"+IntToHex(a,2)+",";
+}
+return str;
+}
+TStringList *ips;
+TStringList *ports;
+TStringList *fips;
+TStringList *fports;
+TStringList *ipblock;
+int WINAPI ThreadClinet(ServerPar *Server_ParClinet);
+int WINAPI ThreadServer(ServerPar *Server_ParServer);
+
+;
+DWORD pBuf;
+
+int main(int argc, char* argv[])
+{
+// tryProxyConnect();
+ips= new TStringList ;
+ports= new TStringList ;
+fips= new TStringList ;
+fports= new TStringList ;
+ipblock= new TStringList ;
+
+ips->LoadFromFile(ExtractFilePath(Application->ExeName)+"ips.txt");
+ports->LoadFromFile(ExtractFilePath(Application->ExeName)+"ports.txt");
+fips->LoadFromFile(ExtractFilePath(Application->ExeName)+"fips.txt");
+fports->LoadFromFile(ExtractFilePath(Application->ExeName)+"fports.txt");
+ipblock->LoadFromFile(ExtractFilePath(Application->ExeName)+"ipblock.txt");
+IpSize= ipblock->Count ;
+WSADATA wsaData;
+InitializeCriticalSection(&CriticalSection);
+
+	if (WSAStartup(MAKEWORD(1, 1), &wsaData) != 0) {
+		fprintf(stderr, "WSAStartup failed.\n");
+		exit(1);
+	}
+
+printf("Server Calisti\n");
+for (int i = 0; i < ips->Count; i++) {
+    Server_Par.index=i;
+	Server_Par.from.sin_family = AF_INET;
+	Server_Par.from.sin_addr.S_un.S_addr=inet_addr(ips->Strings[i].c_str());
+	Server_Par.from.sin_port=htons(ports->Strings[i].ToInt());
+
+	Server_Par.to.sin_family = AF_INET;
+	Server_Par.to.sin_addr.S_un.S_addr=inet_addr(fips->Strings[i].c_str());
+			Server_Par.to.sin_port=htons(fports->Strings[i].ToInt());
+		  BYTE *par = (BYTE *)malloc(sizeof(Server_Par));
+		  memcpy(par,&Server_Par,sizeof(Server_Par));
+if (CreateThread(NULL, 0,(LPTHREAD_START_ROUTINE)&ThreadServer,	(void*) par,0,0)== NULL)
+{
+printf("Error Creating Thread#:");
+exit(1);
+}
+}
+
+
+
+while (1){
+  char command [256];
+  memset(command,0,256);
+  printf ("Insert command: \n");
+  gets (command);
+  printf ("Command is : %s \n",command);
+  String cmd=String(command);
+}
+
+}
+//---------------------------------------------------------------------------
+
+int WINAPI ThreadServer(ServerPar *Server_ParServer)
+{
+	Server_ParServer->ServerSocket=socket(PF_INET, SOCK_STREAM, 0);
+	if (Server_ParServer->ServerSocket == INVALID_SOCKET)
+	{
+		return 1;
+	}
+
+	if (bind(Server_ParServer->ServerSocket, (struct sockaddr *)&Server_ParServer->from, sizeof(Server_ParServer->from)) == SOCKET_ERROR)
+	{
+		printf("Error Server Bind#:\r\n");
+		closesocket(Server_Par.ServerSocket);
+		return 0;
+	}
+
+	if (listen(Server_ParServer->ServerSocket, 5) == SOCKET_ERROR)
+	{
+	   closesocket(Server_ParServer->ServerSocket);
+	   printf("Error Server listen#:");
+	   return 0;
+	}
+	printf ("Server Socket Created: %s : %s \n", inet_ntoa(Server_ParServer->from.sin_addr),IntToStr(ntohs(Server_ParServer->from.sin_port)));
+	sockaddr_in from;
+	int fromlen=sizeof(from);
+	while(true)
+	{
+		SOCKET ClientSocket=accept(Server_ParServer->ServerSocket,(struct sockaddr*)&from,&fromlen);
+		Server_ParServer->ClientSocket= ClientSocket;
+		ServerPar *Server_ParYolla=(ServerPar *) malloc(sizeof(ServerPar));
+		memcpy(Server_ParYolla,Server_ParServer,sizeof(ServerPar));
+		if (CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)&ThreadClinet,(LPVOID)Server_ParYolla,0,0) == NULL)
+		{
+			printf("Error Creating Thread\n");
+			exit(1);
+		}
+	}
+
+}
+
+int WINAPI ThreadClinet(ServerPar *Server_ParClinet)
+ {
+ 	char swx_Addr[30],swx_Login[200],ip[16],port[8];
+	BYTE readbuf[65535];
+	SOCKET sockfd;
+	BYTE Gidecek[25];
+	BYTE GidecekKomut[25];
+	fd_set readfds;
+	struct timeval tv;
+	int len;
+	bool first_packet = false;
+	sockaddr_in saddr;
+	sockaddr_in stoaddr;
+
+ 				if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+				{
+					perror("socket");
+					return 0;
+				}
+		//FD_ZERO(&readfds);
+		//FD_SET(sockfd, &readfds);
+
+	tv.tv_sec = 60;
+	tv.tv_usec = 500000;
+	Devam:
+
+	while(true)
+	{
+		FD_ZERO(&readfds);
+		FD_SET(Server_ParClinet->ClientSocket, &readfds); // Set datas for select
+		FD_SET(sockfd, &readfds); // Set ptym for select
+		int rv =	select( sockfd+1, &readfds, NULL, NULL, &tv);// Wait data for select descriptor
+
+		if (rv == -1||rv == 0)
+		{
+			goto Cikis;
+		}
+
+		if(FD_ISSET(sockfd, &readfds)) // If socket
+		{
+			int got= recv(sockfd,readbuf,65535,0);
+
+			if (got <= 0)
+				goto Cikis;
+
+			got =	send(Server_ParClinet->ClientSocket,readbuf,got,0);
+
+			if (got < 0)
+				goto Cikis;
+
+		}
+
+		if(FD_ISSET(Server_ParClinet->ClientSocket, &readfds))
+		{
+			int got =	recv(Server_ParClinet->ClientSocket,readbuf,65535,0);
+			if (got <= 0)
+				goto Cikis;
+			if (strncmp(readbuf,"CONNECT ",8)==0)
+			{
+
+				sscanf(readbuf,"CONNECT %s \r\nProxy-Authorization: Basic %s\r\n\r\n",swx_Addr,swx_Login) ;
+				char * pch;
+				pch=strrchr(swx_Addr,':');
+				pch-swx_Addr;
+				strncpy(ip,swx_Addr,pch-swx_Addr);
+				strncpy(port,pch+1,lstrlen(pch));
+
+				memset(&saddr,sizeof(saddr),0);
+				memset(&stoaddr,sizeof(stoaddr),0);
+
+				saddr.sin_family = AF_INET;
+				saddr.sin_port = 0;
+				saddr.sin_addr.s_addr= Server_Par.from.sin_addr.s_addr;
+				if (bind(sockfd, (SOCKADDR*)&saddr, sizeof(saddr)) == SOCKET_ERROR)
+				{
+					printf("Error Client Bind#:\r\n");
+					closesocket(Server_Par.ServerSocket);
+					return 0;
+				}
+				stoaddr.sin_family = AF_INET;
+				stoaddr.sin_port = htons(atoi(port));//Server_ParClinet->to.sin_port;
+				stoaddr.sin_addr.s_addr = inet_addr(ip);
+
+					char asd[] = "established Connection...";
+					send(Server_ParClinet->ClientSocket,asd,lstrlen(asd),0);
+					printf ("Tunnel Created From :  %s \n", inet_ntoa(saddr.sin_addr));
+					printf ("Tunnel Created To :  %s \n", inet_ntoa(stoaddr.sin_addr));
+					//FD_SET(sockfd, &readfds); // Set ptym for select
+
+
+
+			}
+			else
+			{
+				if (!first_packet)
+				{
+                    first_packet = true;
+					if(	connect(sockfd, (SOCKADDR*)&stoaddr, sizeof(stoaddr))== -1)
+					{
+						perror("connect");
+						closesocket(sockfd);
+						closesocket(Server_ParClinet->ClientSocket);
+						goto Cikis;
+					}
+				}
+
+				got =	send(sockfd,readbuf,got,0);
+				if (got < 0)
+					goto Cikis;
+			}
+
+
+
+
+
+		}  
+	}
+	Cikis:
+	closesocket(sockfd);
+	closesocket(Server_ParClinet->ClientSocket);
+	printf ("Socket Close  \n");
+	free(Server_ParClinet);
+	return 1 ;
+}
+

@@ -1,0 +1,431 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "Unit2.h"
+#include "ffrmBot.h"
+#include "Base.cpp"
+#include "DBK32functions.hpp"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm2 *Form2;
+
+
+
+
+
+
+ inline void ErasePEHeaderFromMemory()
+{
+	DWORD OldProtect = 0;
+
+	// Get base address of module
+	char *pBaseAddr = (char*)GetModuleHandle(NULL);
+
+	// Change memory protection
+	VirtualProtect(pBaseAddr, 4096, // Assume x86 page size
+			PAGE_READWRITE, &OldProtect);
+
+	// Erase the header
+	ZeroMemory(pBaseAddr, 4096);
+}
+
+
+
+
+
+
+
+
+//---------------------------------------------------------------------------
+__fastcall TForm2::TForm2(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm2::FormCreate(TObject *Sender)
+{
+hsKontrolEvent = CreateEvent(NULL,TRUE,FALSE,"hsKontrolEvent");
+GroupBox1->Left=0;
+GroupBox1->Top=0;
+GroupBox2->Left=0;
+GroupBox2->Top=0;
+Width=210;
+Height=225;
+
+	char tmp[25];	memset(tmp,0,25);
+ReadProcessMemory(GetCurrentProcess(),(LPVOID)KO_WNDA,tmp,20,NULL);
+if (String(tmp)!="Knight OnLine Client") {
+GroupBox1->Visible = false;
+GroupBox2->Visible = true;
+Timer2->Enabled=true;
+HsLastControlTick = GetTickCount();
+}else{
+GroupBox1->Visible = true;
+GroupBox2->Visible = false;
+
+}
+
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm2::HSServerClientError(TObject *Sender,
+	  TCustomWinSocket *Socket, TErrorEvent ErrorEvent, int &ErrorCode)
+{
+	 ErrorCode=0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm2::HSClinetError(TObject *Sender, TCustomWinSocket *Socket,
+	  TErrorEvent ErrorEvent, int &ErrorCode)
+{
+	 ErrorCode=0;
+}
+//---------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void __fastcall TForm2::ServerSocket1ClientConnect(TObject *Sender,
+      TCustomWinSocket *Socket)
+{
+String log = "Client Connected : " +  Socket->RemoteAddress ;
+logyaz(log);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::ServerSocket1ClientDisconnect(TObject *Sender,
+      TCustomWinSocket *Socket)
+{
+//String log = "Client DisConnected : " +  Socket->RemoteAddress ;
+//logyaz(log);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::ServerSocket1ClientError(TObject *Sender,
+      TCustomWinSocket *Socket, TErrorEvent ErrorEvent, int &ErrorCode)
+{
+//String log = "Client Error : " +  Socket->RemoteAddress + " Code : " + IntToStr(ErrorCode);
+//logyaz(log);
+ErrorCode=0;
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm2::Edit2Change(TObject *Sender)
+{
+if (Edit2->Text.ToIntDef(500000)<65535) {
+ServerSocket1->Active=false;
+ServerSocket1->Port=Edit2->Text.ToIntDef(0);
+	Label13->Caption = "Port OK";
+}else{
+	Label13->Caption = "Gecersiz Port";
+}
+
+}
+//---------------------------------------------------------------------------
+
+bool suspensed =false;
+void __fastcall TForm2::Button1Click(TObject *Sender)
+{
+ if (!suspensed) {
+ suspensed=true;
+	  ListProcessThreadsSuspend(GetCurrentProcessId(),my_tid,1);
+		HANDLE	hGameThread;
+		hGameThread = OpenThread(THREAD_SUSPEND_RESUME,false,*(DWORD*)KO_THRD);
+	  SuspendThread(hGameThread);
+	  HsLastControlTick = GetTickCount();
+	  CreateThread(0,0,(LPTHREAD_START_ROUTINE)threadoku,0,0,&HSThreadid);
+	  CreateThread(0,0,(LPTHREAD_START_ROUTINE)kontrol,0,0,&kontrolThreadid);
+	  CreateThread(0,0,(LPTHREAD_START_ROUTINE)kontrol2,0,0,&kontrolThreadid2);
+ }
+if (ServerSocket1->Active) {
+  ServerSocket1->Active=false;
+  Shape1->Brush->Color = clRed;
+	Button1->Caption = "Open Server";
+}else{
+  ServerSocket1->Active=true;
+  Shape1->Brush->Color = clLime;
+	Button1->Caption = "Close Server";
+	//hGameHWND = (HWND)*(DWORD*)KO_HWND;
+   //	ShowWindow(hGameHWND,SW_HIDE);
+
+}
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm2::ClientSocket1Connect(TObject *Sender,
+      TCustomWinSocket *Socket)
+{
+Shape1->Brush->Color = clLime ;
+Memo1->Lines->Add("connect");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::ClientSocket1Error(TObject *Sender,
+      TCustomWinSocket *Socket, TErrorEvent ErrorEvent, int &ErrorCode)
+{
+ErrorCode = 0;
+Shape2->Brush->Color = clRed ;
+Memo1->Lines->Add("err");
+ClientSocket1->Active=false;
+//ShowMessage("HackShield Error ");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::ClientSocket1Disconnect(TObject *Sender,
+	  TCustomWinSocket *Socket)
+{
+Shape2->Brush->Color = clRed ;
+Memo1->Lines->Add("dc");
+}
+//---------------------------------------------------------------------------
+bool isValidIpAddress(char *st)
+{
+    int num, i, len;
+    char *ch;
+
+    //counting number of quads present in a given IP address
+	int quadsCnt=0;
+
+    printf("Split IP: \"%s\"\n", st);
+
+    len = strlen(st);
+
+    //  Check if the string is valid
+    if(len<7 || len>15)
+        return false;
+
+    ch = strtok(st, ".");
+
+    while (ch != NULL) 
+	{
+        quadsCnt++;
+        printf("Quald %d is %s\n", quadsCnt, ch);
+
+        num = 0;
+        i = 0;
+
+        //  Get the current token and convert to an integer value
+        while(ch[i]!='\0')
+        {
+            num = num*10;
+            num = num+(ch[i]-'0');
+            i++;
+        }
+
+        if(num<0 || num>255)
+        {
+            printf("Not a valid ip\n");
+            return false;
+		}
+
+        if( (quadsCnt == 1 && num == 0) || (quadsCnt == 4 && num == 0))
+        {
+            printf("Not a valid ip, quad: %d AND/OR quad:%d is zero\n", quadsCnt, quadsCnt);
+            return false;
+		}
+
+        ch = strtok(NULL, ".");
+    }
+
+    //  Check the address string, should be n.n.n.n format
+    if(quadsCnt!=4)
+    {
+        return false;
+    }
+
+    //  Looks like a valid IP address
+    return true;
+}
+void __fastcall TForm2::Edit1Change(TObject *Sender)
+{
+if (isValidIpAddress(Edit1->Text.c_str())) {
+Label3->Caption="Ip Ok";
+ClientSocket1->Active=false;
+ClientSocket1->Address = Edit1->Text;
+}else{
+Label3->Caption="Hatali Ip Adresi";
+
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::Edit3Change(TObject *Sender)
+{
+if ((Edit3->Text.ToIntDef(0)!=0)&&(Edit3->Text.ToIntDef(0)<65535)) {
+ClientSocket1->Active=false;
+ClientSocket1->Port=Edit3->Text.ToIntDef(0);
+
+}else{
+Label3->Caption =  "Port Hatasi";
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::Button2Click(TObject *Sender)
+{
+if (ClientSocket1->Active) {
+  ClientSocket1->Active=false;
+  Shape2->Brush->Color = clRed;
+	Button2->Caption = "Baglan";
+}else{
+  ClientSocket1->Active=true;
+  Shape2->Brush->Color = clLime;
+	Button2->Caption = "Kapat";
+
+}
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm2::ClientSocket1Read(TObject *Sender,
+      TCustomWinSocket *Socket)
+{
+Memo1->Lines->Add("read");
+frmBot->hstimer->Enabled=false;
+BYTE Gelen[1024];
+BYTE Yollancak[1024];
+memset(Gelen,0,1024);
+int len = Socket->ReceiveLength();
+Socket->ReceiveBuf(Gelen,len);
+//Memo1->Lines->Add(BufferToHex(Gelen,len));
+BYTE Komut[1024];
+memset(Komut,1024,0);
+Komut[0]=0xb0;
+
+Komut[1]=1;
+WORD count=*(WORD*)&Gelen[0x190];
+*(WORD*) &Komut[2]=(WORD)count;
+memcpy(&Komut[4],Gelen,count);
+if (count!=0) {
+_CPacket.PSend(Komut,count+4);
+}else{
+ShowMessage("HackShield Ile ilgili problem olustu.");
+//Form3->cevapbekle=false;
+//Form3->Timer1->Enabled=true;
+}
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm2::ServerSocket1ClientRead(TObject *Sender,
+      TCustomWinSocket *Socket)
+{
+hsgelenyapi *readgln= (hsgelenyapi*)malloc(sizeof(hsgelenyapi));
+readgln->Socket = Socket;
+   readgln->ghWriteEvent = CreateEvent(
+		NULL,               // default security attributes
+		TRUE,               // manual-reset event
+        FALSE,              // initial state is nonsignaled
+		""  // object name
+		);
+PostThreadMessage(HSThreadid,socketoku,(WPARAM)readgln,0);
+
+	DWORD dwWaitResult = WaitForSingleObject(
+		readgln->ghWriteEvent, // event handle
+		INFINITE);    // indefinite wait
+
+		CloseHandle(readgln->ghWriteEvent);
+		free(readgln);
+
+}
+
+
+//---------------------------------------------------------------------------
+bool started;
+
+
+
+void __fastcall TForm2::Timer2Timer(TObject *Sender)
+{
+/*
+Timer2->Enabled=false;
+String path = ExtractFilePath(Application->ExeName);
+
+	ifstream fPath;
+	path = path + "kopath.ini";
+	fPath.open(path.c_str());
+	if(fPath.is_open() == true){
+
+		char Buffer[256];	memset(Buffer,0,256);
+		fPath.getline(Buffer,256);
+
+		//if(strlen(Buffer) > 0)
+		   //	frmLoader->txtPath->Text = Buffer;
+	   //	else
+		   //	frmLoader->txtPath->Text = "";
+
+				fPath.getline(Buffer,256);
+
+		if(strlen(Buffer) > 0)
+			Edit1->Text = Buffer;
+		else
+			Edit1->Text = "127.0.0.1";
+
+					fPath.getline(Buffer,256);
+
+		if(strlen(Buffer) > 0)
+			Edit3->Text = Buffer;
+		else
+			Edit3->Text = "16600";
+
+		fPath.close();
+	}
+	Button2Click(0);
+	*/
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm2::Button4Click(TObject *Sender)
+{
+	BYTE pSend[1] = {0x48};
+	_CPacket.PSend(pSend,1);
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm2::Timer3Timer(TObject *Sender)
+{
+if (!started) {
+if(FindWindowA(NULL,"initialization")){
+Button1Click(0);
+started = true;
+}
+}
+if(FindWindowA(NULL,"Knight Online")){
+TerminateProcess(GetCurrentProcess(),0);
+}
+if (FindWindowA(NULL,"Error")) {
+	HWND wnd = FindWindowA(NULL,"Error") ;
+//CloseWindow(wnd) ;
+	  HWND ButtonHandle = FindWindowEx(wnd, 0, NULL, "OK");
+   SendMessage(wnd, WM_COMMAND, MAKEWORD(GetDlgCtrlID(ButtonHandle), BN_CLICKED ), (LPARAM)ButtonHandle);
+
+}
+		//SetEvent(hsKontrolEvent);
+/*ofstream fSave;
+	fSave.open("reiz",std::ios_base::out | std::ios_base::app);
+	if(fSave.is_open() == true){
+		fSave << " : " << "\n";
+		fSave.close();
+	}    */
+}
+//---------------------------------------------------------------------------
+
+

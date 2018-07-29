@@ -1,0 +1,75 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "Unit1.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm1 *Form1;
+//---------------------------------------------------------------------------
+__fastcall TForm1::TForm1(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::Button1Click(TObject *Sender)
+{
+Memo1->Lines->Clear();
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::Button2Click(TObject *Sender)
+{
+if (Edit1->Text=="") {
+ShowMessage("Dosya Adi Yazmalisiniz..") ;
+return;
+
+}
+Memo1->Lines->SaveToFile(Edit1->Text);
+}
+//---------------------------------------------------------------------------
+bool convertbufferandsend(String buf){
+try {
+if (buf.Length()<2) {
+	return false;
+}
+int convertedlen = buf.Length()/2;
+if (convertedlen*2!=buf.Length()) {
+	return false;
+}
+BYTE Buffer[1024];
+for (int i = 0; i < convertedlen; i++) {
+BYTE bufnow = StrToIntDef("0x"+buf.SubString(i*2+1,2),0) ;
+Buffer[i]=bufnow ;
+}
+_CPacket.PSend(Buffer,convertedlen);
+} catch (...) {
+	return false;
+}
+}
+void __fastcall TForm1::Button3Click(TObject *Sender)
+{
+convertbufferandsend(Edit2->Text);
+convertbufferandsend(Edit3->Text);
+convertbufferandsend(Edit4->Text);
+convertbufferandsend(Edit5->Text);
+convertbufferandsend(Edit6->Text);
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::CheckListBox1ClickCheck(TObject *Sender)
+{
+for (int i = 0; i < CheckListBox1->Items->Count; i++) {
+loglanacak[i]=CheckListBox1->Checked[i];
+}
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm1::CheckBox1Click(TObject *Sender)
+{
+logaktif=CheckBox1->Checked;	
+}
+//---------------------------------------------------------------------------
+

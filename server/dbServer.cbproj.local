@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2011.09.15 03:03:49.785.cpp,C:\Users\mem\Documents\RAD Studio\Projects\Unit1.cpp=C:\Users\mem\Desktop\mysql\Unit1.cpp</Transaction>
+    <Transaction>2011.09.15 03:03:49.790.h,C:\Users\mem\Documents\RAD Studio\Projects\Unit1.h=C:\Users\mem\Desktop\mysql\Unit1.h</Transaction>
+    <Transaction>2011.09.15 03:03:49.790.dfm,C:\Users\mem\Documents\RAD Studio\Projects\Unit1.dfm=C:\Users\mem\Desktop\mysql\Unit1.dfm</Transaction>
+    <Transaction>2011.09.15 03:03:50.457.cbproj,C:\Users\mem\Documents\RAD Studio\Projects\Project1.cbproj=C:\Users\mem\Desktop\mysql\Project1.cbproj</Transaction>
+    <Transaction>2011.09.16 03:15:47.451.lib,C:\Users\mem\Desktop\mysql\lib\mysqlclient.lib=</Transaction>
+    <Transaction>2011.09.20 18:17:12.043.cbproj,C:\Users\Hog\Desktop\son claismalarim 18.09.2011\Fresh\server\Project1.cbproj=C:\Users\Hog\Desktop\son claismalarim 18.09.2011\Fresh\server\Server.cbproj</Transaction>
+    <Transaction>2011.09.21 19:41:55.186.cbproj,C:\Users\Hog\Desktop\son claismalarim 18.09.2011\Fresh\server\Server.cbproj=C:\Users\Hog\Desktop\son claismalarim 18.09.2011\Fresh\server\dbServer.cbproj</Transaction>
+    <Transaction>2012.11.09 06:45:22.964.cpp,C:\Users\swixdorf\Desktop\server\Unit3.cpp=</Transaction>
+    <Transaction>2012.11.09 06:45:22.979.dfm,C:\Users\swixdorf\Desktop\server\Unit3.dfm=</Transaction>
+  </Transactions>
+</BorlandProject>

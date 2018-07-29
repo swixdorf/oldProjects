@@ -1,0 +1,84 @@
+//---------------------------------------------------------------------------
+
+#ifndef Unit1H
+#define Unit1H
+//---------------------------------------------------------------------------
+#include <Classes.hpp>
+#include <Controls.hpp>
+#include <StdCtrls.hpp>
+#include <Forms.hpp>
+#include <Grids.hpp>
+#include <Menus.hpp>
+#include <ScktComp.hpp>
+#include <DB.hpp>
+#include <DBGrids.hpp>
+#include <DBTables.hpp>
+#include <ExtCtrls.hpp>
+#include <ComCtrls.hpp>
+//---------------------------------------------------------------------------
+class TForm1 : public TForm
+{
+__published:	// IDE-managed Components
+	TMemo *Memo1;
+	TServerSocket *ServerSocket1;
+	TEdit *Version;
+	TButton *Button1;
+	TCheckBox *free;
+	TSession *Session1;
+	TDatabase *Database1;
+	TDBGrid *DBGrid1;
+	TListBox *ListBox1;
+	TEdit *Edit1;
+	TButton *Button4;
+	TButton *Button5;
+	TButton *Button6;
+	TButton *Button7;
+	TButton *Button8;
+	TButton *Button9;
+	TListBox *ListBox2;
+	TListBox *ListBox3;
+	TButton *Button10;
+	TTimer *Timer1;
+	TMemo *Memo2;
+	TButton *Button11;
+	TButton *Button12;
+	TEdit *Edit3;
+	TButton *Button13;
+	TQuery *Query1;
+	TMemo *Memo3;
+	void __fastcall ServerSocket1ClientConnect(TObject *Sender,
+          TCustomWinSocket *Socket);
+	void __fastcall ServerSocket1ClientError(TObject *Sender,
+          TCustomWinSocket *Socket, TErrorEvent ErrorEvent, int &ErrorCode);
+	void __fastcall ServerSocket1ClientRead(TObject *Sender,
+          TCustomWinSocket *Socket);
+	void __fastcall FormDestroy(TObject *Sender);
+	void __fastcall Button2Click(TObject *Sender);
+	void __fastcall Button3Click(TObject *Sender);
+	void __fastcall ServerSocket1Accept(TObject *Sender, TCustomWinSocket *Socket);
+	void __fastcall Button4Click(TObject *Sender);
+	void __fastcall Button5Click(TObject *Sender);
+	void __fastcall Button6Click(TObject *Sender);
+	void __fastcall Button7Click(TObject *Sender);
+	void __fastcall Button8Click(TObject *Sender);
+	void __fastcall Button9Click(TObject *Sender);
+	void __fastcall Button10Click(TObject *Sender);
+	void __fastcall Timer1Timer(TObject *Sender);
+	void __fastcall Button11Click(TObject *Sender);
+	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall VersionChange(TObject *Sender);
+	void __fastcall Button12Click(TObject *Sender);
+	void __fastcall Button13Click(TObject *Sender);
+	void __fastcall Database1AfterConnect(TObject *Sender);
+	void __fastcall Query1PostError(TDataSet *DataSet, EDatabaseError *E,
+          TDataAction &Action);
+	void __fastcall Database1AfterDisconnect(TObject *Sender);
+	void __fastcall Button1Click(TObject *Sender);
+private:	// User declarations
+public:		// User declarations
+	__fastcall TForm1(TComponent* Owner);
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TForm1 *Form1;
+//---------------------------------------------------------------------------
+#endif

@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2013.02.04 20:52:48.430.cpp,C:\Users\swixdorf\Documents\RAD Studio\Projects\File1.cpp=C:\Users\swixdorf\Documents\RAD Studio\Projects\swx_socket\File1.cpp</Transaction>
+    <Transaction>2013.02.04 20:52:56.518.cbproj,C:\Users\swixdorf\Documents\RAD Studio\Projects\Project1.cbproj=C:\Users\swixdorf\Documents\RAD Studio\Projects\swx_socket\Project1.cbproj</Transaction>
+    <Transaction>2013.02.04 20:53:02.005.cbproj,C:\Users\swixdorf\Documents\RAD Studio\Projects\swx_socket\Project1.cbproj=C:\Users\swixdorf\Documents\RAD Studio\Projects\swx_socket\socket.cbproj</Transaction>
+  </Transactions>
+</BorlandProject>

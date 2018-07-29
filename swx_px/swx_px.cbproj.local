@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2013.05.31 01:30:41.926.cpp,C:\Users\swixdorf\Documents\RAD Studio\Projects\Unit2.cpp=C:\Users\swixdorf\Documents\RAD Studio\Projects\MainForm.cpp</Transaction>
+    <Transaction>2013.05.31 01:30:41.926.h,C:\Users\swixdorf\Documents\RAD Studio\Projects\Unit2.h=C:\Users\swixdorf\Documents\RAD Studio\Projects\MainForm.h</Transaction>
+    <Transaction>2013.05.31 01:30:41.926.dfm,C:\Users\swixdorf\Documents\RAD Studio\Projects\Unit2.dfm=C:\Users\swixdorf\Documents\RAD Studio\Projects\MainForm.dfm</Transaction>
+    <Transaction>2013.05.31 01:30:54.449.cbproj,C:\Users\swixdorf\Documents\RAD Studio\Projects\Project2.cbproj=C:\Users\swixdorf\Documents\RAD Studio\Projects\swx_px.cbproj</Transaction>
+    <Transaction>2013.05.31 01:32:45.385.cbproj,C:\Users\swixdorf\Documents\RAD Studio\Projects\swx_px.cbproj=C:\Users\swixdorf\Documents\RAD Studio\Projects\swx_px\swx_px.cbproj</Transaction>
+  </Transactions>
+</BorlandProject>

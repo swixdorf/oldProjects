@@ -1,0 +1,216 @@
+{
+Unit kaynak;
+
+interface
+uses
+  ActiveX,  Windows, Messages,OleCtrls,shdocvw, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs;
+
+  implementation
+function WB_SaveHTMLCode(WebBrowser: TWebBrowser; const FileName:
+TFileName): Boolean;
+var
+  ps: IPersistStreamInit;
+  fs: TFileStream;
+  sa: IStream;
+begin
+  ps := WebBrowser.Document as IPersistStreamInit;
+  fs := TFileStream.Create(FileName, fmCreate);
+  try
+    sa := TStreamAdapter.Create(fs, soReference) as IStream;
+    Result := Succeeded(ps.Save(sa, True));
+  finally
+    fs.Free;
+  end;
+end;
+
+function WB_GetHTMLCode(WebBrowser: TWebBrowser; ACode: TStrings): Boolean;
+var
+  ps: IPersistStreamInit;
+  ss: TStringStream;
+  sa: IStream;
+  s: string;
+begin
+  ps := WebBrowser.Document as IPersistStreamInit;
+  s := '';
+  ss := TStringStream.Create(s);
+  try
+    sa := TStreamAdapter.Create(ss, soReference) as IStream;
+    Result := Succeeded(ps.Save(sa, True));
+    if Result then ACode.Add(ss.Datastring);
+  finally
+    ss.Free;
+  end;
+end;
+end.
+}
+Unit kaynak;
+interface
+uses
+  shdocvw,Windows,Forms, Messages,OleCtrls, SysUtils, Variants, Classes, Graphics, Controls,MSHTML,ActiveX;
+
+
+function WB_SaveHTMLCode(WebBrowser: TWebBrowser; const FileName: TFileName): Boolean;
+function WB_GetHTMLCode(WebBrowser: TWebBrowser; ACode: TStrings): Boolean;
+function WB_GetCookieCode(WebBrowser: TWebBrowser): String;
+function WB_SetValue(WebBrowser: TWebBrowser;fiedname:string;value:string): Boolean;
+function WB_Post(WebBrowser: TWebBrowser): Boolean;
+    implementation
+
+procedure WBLoadHTML(WebBrowser: TWebBrowser; HTMLCode: string) ;
+var
+   sl: TStringList;
+   ms: TMemoryStream;
+begin
+   WebBrowser.Navigate('about:blank') ;
+   while WebBrowser.ReadyState < READYSTATE_INTERACTIVE do
+    Application.ProcessMessages;
+
+   if Assigned(WebBrowser.Document) then
+   begin
+     sl := TStringList.Create;
+     try
+       ms := TMemoryStream.Create;
+       try
+         sl.Text := HTMLCode;
+         sl.SaveToStream(ms) ;
+         ms.Seek(0, 0) ;
+         (WebBrowser.Document as IPersistStreamInit).Load(TStreamAdapter.Create(ms)) ;
+       finally
+         ms.Free;
+       end;
+     finally
+       sl.Free;
+     end;
+   end;
+end;
+
+ function GetFormByNumber(document: IHTMLDocument2;
+    formNumber: integer): IHTMLFormElement;
+var
+  forms: IHTMLElementCollection;
+begin
+  forms := document.Forms as IHTMLElementCollection;
+  if formNumber < forms.Length then
+    result := forms.Item(formNumber,'') as IHTMLFormElement
+  else
+    result := nil;
+end;
+
+ function GetFormByName(document: IHTMLDocument2;
+    const formName: string): IHTMLFormElement;
+var
+  forms: IHTMLElementCollection;
+begin
+  forms := document.Forms as IHTMLElementCollection;
+  result := forms.Item(formName,'') as IHTMLFormElement
+end;
+procedure SetFieldValue(theForm: IHTMLFormElement;
+  const fieldName: string; const newValue: string;
+  const instance: integer=0);
+var
+  field: IHTMLElement;
+  inputField: IHTMLInputElement;
+  selectField: IHTMLSelectElement;
+  textField: IHTMLTextAreaElement;
+begin
+  field := theForm.Item(fieldName,instance) as IHTMLElement;
+  if Assigned(field) then
+  begin
+    if field.tagName = 'INPUT' then
+    begin
+      inputField := field as IHTMLInputElement;
+      if (inputField.type_ <> 'radio') and
+         (inputField.type_ <> 'checkbox')
+      then
+        inputField.value := newValue
+      else
+        inputField.checked := (newValue = 'checked');
+    end
+    else if field.tagName = 'SELECT' then
+    begin
+      selectField := field as IHTMLSelectElement;
+      selectField.value := newValue;
+    end
+    else if field.tagName = 'TEXTAREA' then
+    begin
+      textField := field as IHTMLTextAreaElement;
+      textField.value := newValue;
+    end;
+  end;
+end;
+ function WB_Post(WebBrowser: TWebBrowser): Boolean;
+ var
+   document: IHTMLDocument2;
+  theForm: IHTMLFormElement;
+  index: integer;
+begin
+  document := WebBrowser.Document as IHTMLDocument2;
+  theForm := GetFormByNumber(document,0);
+  theForm.submit;
+end;
+function WB_SetValue(WebBrowser: TWebBrowser;fiedname:string;value:string): Boolean;
+var
+  document: IHTMLDocument2;
+  theForm: IHTMLFormElement;
+  index: integer;
+begin
+  document := WebBrowser.Document as IHTMLDocument2;
+  theForm := GetFormByNumber(WebBrowser.Document as IHTMLDocument2,0);
+  SetFieldValue(theForm,fiedname,value);
+end;
+
+function WB_GetCookieCode(WebBrowser: TWebBrowser) : String;
+var
+  document: IHTMLDocument2;
+  cookies: String;
+begin
+  document := WebBrowser.Document as IHTMLDocument2;
+  if Assigned(document) then
+  begin
+    cookies := document.cookie;
+  end;
+  Result := cookies
+    end;
+function WB_SaveHTMLCode(WebBrowser: TWebBrowser; const FileName:
+TFileName): Boolean;
+var
+  ps: IPersistStreamInit;
+  fs: TFileStream;
+  sa: IStream;
+begin
+  ps := WebBrowser.Document as IPersistStreamInit;
+  fs := TFileStream.Create(FileName, fmCreate);
+  try
+    sa := TStreamAdapter.Create(fs, soReference) as IStream;
+    Result := Succeeded(ps.Save(sa, True));
+  finally
+    fs.Free;
+  end;
+end;
+
+function WB_GetHTMLCode(WebBrowser: TWebBrowser; ACode: TStrings): Boolean;
+var
+  ps: IPersistStreamInit;
+  ss: TStringStream;
+  sa: IStream;
+  s: string;
+  kon: integer;
+begin
+  ps := WebBrowser.Document as IPersistStreamInit;
+
+  if Assigned(ps) then
+  begin
+  s := '';
+  ss := TStringStream.Create(s);
+  try
+    sa := TStreamAdapter.Create(ss, soReference) as IStream;
+    Result := Succeeded(ps.Save(sa, True));
+    if Result then ACode.Add(ss.Datastring);
+  finally
+    ss.Free;
+  end;
+  end;
+end;
+
+end.

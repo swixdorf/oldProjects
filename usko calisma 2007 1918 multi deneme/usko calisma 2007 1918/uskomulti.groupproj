@@ -1,0 +1,54 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{3ecb18ed-6eb6-45c4-bfaf-245bc83b22a6}</ProjectGuid>
+  </PropertyGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Projects Include="kolebot_loader\klauncher.cbproj" />
+    <Projects Include="loaderdll\kmodule.cbproj" />
+    <Projects Include="usko calisma 2007\KoInformer.cbproj" />
+  </ItemGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Default.Personality</Borland.Personality>
+    <Borland.ProjectType />
+    <BorlandProject>
+<BorlandProject xmlns=""><Default.Personality></Default.Personality></BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Target Name="KoInformer">
+    <MSBuild Projects="usko calisma 2007\KoInformer.cbproj" Targets="" />
+  </Target>
+  <Target Name="KoInformer:Clean">
+    <MSBuild Projects="usko calisma 2007\KoInformer.cbproj" Targets="Clean" />
+  </Target>
+  <Target Name="KoInformer:Make">
+    <MSBuild Projects="usko calisma 2007\KoInformer.cbproj" Targets="Make" />
+  </Target>
+  <Target Name="klauncher">
+    <MSBuild Projects="kolebot_loader\klauncher.cbproj" Targets="" />
+  </Target>
+  <Target Name="klauncher:Clean">
+    <MSBuild Projects="kolebot_loader\klauncher.cbproj" Targets="Clean" />
+  </Target>
+  <Target Name="klauncher:Make">
+    <MSBuild Projects="kolebot_loader\klauncher.cbproj" Targets="Make" />
+  </Target>
+  <Target Name="kmodule">
+    <MSBuild Projects="loaderdll\kmodule.cbproj" Targets="" />
+  </Target>
+  <Target Name="kmodule:Clean">
+    <MSBuild Projects="loaderdll\kmodule.cbproj" Targets="Clean" />
+  </Target>
+  <Target Name="kmodule:Make">
+    <MSBuild Projects="loaderdll\kmodule.cbproj" Targets="Make" />
+  </Target>
+  <Target Name="Build">
+    <CallTarget Targets="KoInformer;klauncher;kmodule" />
+  </Target>
+  <Target Name="Clean">
+    <CallTarget Targets="KoInformer:Clean;klauncher:Clean;kmodule:Clean" />
+  </Target>
+  <Target Name="Make">
+    <CallTarget Targets="KoInformer:Make;klauncher:Make;kmodule:Make" />
+  </Target>
+  <Import Condition="Exists('$(MSBuildBinPath)\Borland.Group.Targets')" Project="$(MSBuildBinPath)\Borland.Group.Targets" />
+</Project>

@@ -1,0 +1,55 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "Unit1.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm1 *Form1;
+//---------------------------------------------------------------------------
+__fastcall TForm1::TForm1(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+DWORD HSThreadid;
+
+typedef struct{
+TCustomWinSocket *Socket;
+HANDLE ghWriteEvent;
+}hsgelenyapi;
+
+
+int WINAPI threadoku(){
+hsgelenyapi *gelenhs;
+Form1->Memo1->Lines->Add("Thread Start");
+ MSG msg;
+while(::GetMessage( &msg, NULL, 0, 0 ))
+ {
+
+ switch (msg.message) {
+ case socketoku:{
+ Form1->Memo1->Lines->Add("Thread oku");
+ gelenhs= (hsgelenyapi*)msg.wParam;
+ //hscoz(gelenhs->Socket);
+ if (! SetEvent(gelenhs->ghWriteEvent) )
+	{
+		Form1->Memo1->Lines->Add("SetEvent failed : "+IntToStr( GetLastError()));
+	}else {
+	   Form1->Memo1->Lines->Add("SetEvent ok");
+    }
+ }break;
+
+ default:
+	 ;
+ }
+ }
+Form1->Memo1->Lines->Add("Thread cik");
+}
+void __fastcall TForm1::Button1Click(TObject *Sender)
+{
+	  CreateThread(0,0,(LPTHREAD_START_ROUTINE)threadoku,0,0,&HSThreadid);
+}
+//---------------------------------------------------------------------------

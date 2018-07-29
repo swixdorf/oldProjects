@@ -1,0 +1,268 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Usko Server - Kapali'
+  ClientHeight = 637
+  ClientWidth = 675
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Memo1: TMemo
+    Left = 8
+    Top = 344
+    Width = 361
+    Height = 257
+    Lines.Strings = (
+      'Memo1')
+    TabOrder = 0
+  end
+  object Version: TEdit
+    Left = 474
+    Top = 167
+    Width = 121
+    Height = 21
+    TabOrder = 1
+    Text = '2'
+    OnChange = VersionChange
+  end
+  object free: TCheckBox
+    Left = 305
+    Top = 264
+    Width = 97
+    Height = 17
+    Caption = 'ucretsiz kullanim'
+    TabOrder = 2
+  end
+  object DBGrid1: TDBGrid
+    Left = 8
+    Top = 8
+    Width = 659
+    Height = 153
+    TabOrder = 3
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Style = []
+  end
+  object ListBox1: TListBox
+    Left = 474
+    Top = 194
+    Width = 121
+    Height = 112
+    ItemHeight = 13
+    TabOrder = 4
+  end
+  object Edit1: TEdit
+    Left = 474
+    Top = 312
+    Width = 121
+    Height = 21
+    TabOrder = 5
+    Text = 'Edit1'
+  end
+  object Button4: TButton
+    Left = 601
+    Top = 312
+    Width = 75
+    Height = 25
+    Caption = 'banla'
+    TabOrder = 6
+    OnClick = Button4Click
+  end
+  object Button5: TButton
+    Left = 143
+    Top = 264
+    Width = 75
+    Height = 25
+    Caption = 'ac'
+    TabOrder = 7
+    OnClick = Button5Click
+  end
+  object Button6: TButton
+    Left = 224
+    Top = 264
+    Width = 75
+    Height = 25
+    Caption = 'kapa'
+    TabOrder = 8
+    OnClick = Button6Click
+  end
+  object Button7: TButton
+    Left = 120
+    Top = 607
+    Width = 75
+    Height = 25
+    Caption = 'Alay'#305' ban :)'
+    TabOrder = 9
+    OnClick = Button7Click
+  end
+  object Button8: TButton
+    Left = 601
+    Top = 194
+    Width = 75
+    Height = 25
+    Caption = 'save'
+    TabOrder = 10
+    OnClick = Button8Click
+  end
+  object Button9: TButton
+    Left = 601
+    Top = 225
+    Width = 75
+    Height = 25
+    Caption = 'load'
+    TabOrder = 11
+    OnClick = Button9Click
+  end
+  object ListBox2: TListBox
+    Left = 375
+    Top = 344
+    Width = 121
+    Height = 257
+    ItemHeight = 13
+    TabOrder = 12
+  end
+  object ListBox3: TListBox
+    Left = 502
+    Top = 344
+    Width = 75
+    Height = 257
+    ItemHeight = 13
+    TabOrder = 13
+  end
+  object Button10: TButton
+    Left = 464
+    Top = 604
+    Width = 75
+    Height = 25
+    Caption = 'baban'
+    TabOrder = 14
+    OnClick = Button10Click
+  end
+  object Memo2: TMemo
+    Left = 8
+    Top = 295
+    Width = 460
+    Height = 43
+    TabOrder = 15
+  end
+  object Button11: TButton
+    Left = 408
+    Top = 264
+    Width = 75
+    Height = 25
+    Caption = 'hatalog save'
+    TabOrder = 16
+    OnClick = Button11Click
+  end
+  object Button12: TButton
+    Left = 8
+    Top = 235
+    Width = 75
+    Height = 25
+    Caption = 'SocketBosalt'
+    TabOrder = 17
+    OnClick = Button12Click
+  end
+  object Edit3: TEdit
+    Left = 8
+    Top = 266
+    Width = 73
+    Height = 21
+    TabOrder = 18
+    Text = '15333'
+  end
+  object Button13: TButton
+    Left = 78
+    Top = 264
+    Width = 59
+    Height = 25
+    Caption = 'SetPort'
+    TabOrder = 19
+    OnClick = Button13Click
+  end
+  object Memo3: TMemo
+    Left = 8
+    Top = 167
+    Width = 460
+    Height = 60
+    TabOrder = 20
+  end
+  object Edit2: TEdit
+    Left = 97
+    Top = 237
+    Width = 121
+    Height = 21
+    TabOrder = 21
+    Text = 'bot_program'
+    OnChange = Edit2Change
+  end
+  object Button1: TButton
+    Left = 232
+    Top = 233
+    Width = 75
+    Height = 25
+    Caption = 'tools'
+    TabOrder = 22
+    OnClick = Button1Click
+  end
+  object Button2: TButton
+    Left = 327
+    Top = 233
+    Width = 75
+    Height = 25
+    Caption = 'sync'
+    TabOrder = 23
+  end
+  object ServerSocket1: TServerSocket
+    Active = False
+    Port = 15333
+    ServerType = stNonBlocking
+    OnAccept = ServerSocket1Accept
+    OnClientConnect = ServerSocket1ClientConnect
+    OnClientRead = ServerSocket1ClientRead
+    OnClientError = ServerSocket1ClientError
+    Left = 592
+    Top = 416
+  end
+  object Session1: TSession
+    SessionName = 'bootsession'
+    Left = 592
+    Top = 384
+  end
+  object Database1: TDatabase
+    AliasName = 'server'
+    DatabaseName = 'bot_program'
+    LoginPrompt = False
+    SessionName = 'bootsession'
+    AfterConnect = Database1AfterConnect
+    AfterDisconnect = Database1AfterDisconnect
+    Left = 624
+    Top = 352
+  end
+  object Timer1: TTimer
+    Interval = 10000
+    OnTimer = Timer1Timer
+    Left = 624
+    Top = 384
+  end
+  object Query1: TQuery
+    CachedUpdates = True
+    OnPostError = Query1PostError
+    DatabaseName = 'bot_program'
+    SessionName = 'bootsession'
+    SQL.Strings = (
+      'SELECT * FROM users')
+    Left = 592
+    Top = 352
+  end
+end

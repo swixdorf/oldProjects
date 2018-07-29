@@ -1,0 +1,86 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "Unit1.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm1 *Form1;
+//---------------------------------------------------------------------------
+__fastcall TForm1::TForm1(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+TListBox *myBox[17];
+TListBox *myBox2[17];
+void __fastcall TForm1::FormCreate(TObject *Sender)
+{
+
+for (int i = 0; i < 17; i++)
+{
+myBox[i] = new TListBox(this);
+myBox2[i] = new TListBox(this);
+myBox[i]->Parent = this;
+myBox2[i]->Parent = this;
+myBox[i]->Visible = false;
+myBox2[i]->Visible = false;
+String a = IntToStr(i+194)+".txt";
+myBox[i]->Items->LoadFromFile(a);
+a+="a";
+myBox2[i]->Items->LoadFromFile(a);
+
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Edit1Enter(TObject *Sender)
+{
+Edit1->Text = "";	
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Edit1KeyPress(TObject *Sender, char &Key)
+{
+if (Key == VK_RETURN) {
+Memo1->Lines->Clear();
+for (int i = 0; i < 17; i++)
+{
+if (myBox2[i]->Items->IndexOf(Edit1->Text)!=-1) {
+String buf = IntToStr(i+194)+"-var";
+Memo1->Lines->Add(buf);
+}
+}
+
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::ComboBox1Change(TObject *Sender)
+{
+ListBox1->Items = myBox[ComboBox1->ItemIndex]->Items;	
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::ListBox1Click(TObject *Sender)
+{
+Edit1->Text = ListBox1->Items->Strings[ListBox1->ItemIndex];
+Memo1->Lines->Clear();
+for (int i = 0; i < 17; i++)
+{
+if (myBox2[i]->Items->IndexOf(Edit1->Text)!=-1) {
+String buf = IntToStr(i+194)+"-var";
+Memo1->Lines->Add(buf);
+}
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button1Click(TObject *Sender)
+{
+String a = ListBox1->Items->Strings[ListBox1->ItemIndex];	
+}
+//---------------------------------------------------------------------------
+

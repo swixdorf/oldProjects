@@ -1,0 +1,44 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{7dc4a90a-7c2d-4928-ae1b-01550fca84e3}</ProjectGuid>
+  </PropertyGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Projects Include="Accountkayit.cbproj" />
+    <Projects Include="ZyngaPokerMesaj.cbproj" />
+  </ItemGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Default.Personality</Borland.Personality>
+    <Borland.ProjectType />
+    <BorlandProject>
+  <BorlandProject xmlns=""> <Default.Personality> </Default.Personality> </BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Target Name="Accountkayit">
+    <MSBuild Projects="Accountkayit.cbproj" Targets="" />
+  </Target>
+  <Target Name="Accountkayit:Clean">
+    <MSBuild Projects="Accountkayit.cbproj" Targets="Clean" />
+  </Target>
+  <Target Name="Accountkayit:Make">
+    <MSBuild Projects="Accountkayit.cbproj" Targets="Make" />
+  </Target>
+  <Target Name="ZyngaPokerMesaj">
+    <MSBuild Projects="ZyngaPokerMesaj.cbproj" Targets="" />
+  </Target>
+  <Target Name="ZyngaPokerMesaj:Clean">
+    <MSBuild Projects="ZyngaPokerMesaj.cbproj" Targets="Clean" />
+  </Target>
+  <Target Name="ZyngaPokerMesaj:Make">
+    <MSBuild Projects="ZyngaPokerMesaj.cbproj" Targets="Make" />
+  </Target>
+  <Target Name="Build">
+    <CallTarget Targets="Accountkayit;ZyngaPokerMesaj" />
+  </Target>
+  <Target Name="Clean">
+    <CallTarget Targets="Accountkayit:Clean;ZyngaPokerMesaj:Clean" />
+  </Target>
+  <Target Name="Make">
+    <CallTarget Targets="Accountkayit:Make;ZyngaPokerMesaj:Make" />
+  </Target>
+  <Import Condition="Exists('$(MSBuildBinPath)\Borland.Group.Targets')" Project="$(MSBuildBinPath)\Borland.Group.Targets" />
+</Project>

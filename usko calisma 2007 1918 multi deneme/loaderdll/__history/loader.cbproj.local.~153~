@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2009.02.18 01:21:59.500.cpp,C:\Documents and Settings\Swx\Belgelerim\RAD Studio\Projects\KoInformer\Unit1.cpp=</Transaction>
+    <Transaction>2009.02.18 01:21:59.500.dfm,C:\Documents and Settings\Swx\Belgelerim\RAD Studio\Projects\KoInformer\Unit1.dfm=</Transaction>
+    <Transaction>2009.02.18 01:22:19.921.cpp,C:\Documents and Settings\Swx\Belgelerim\RAD Studio\Projects\KoInformer\Unit2.cpp=C:\Documents and Settings\Swx\Belgelerim\RAD Studio\Projects\KoInformer\Unit1.cpp</Transaction>
+    <Transaction>2009.02.18 01:22:19.921.h,C:\Documents and Settings\Swx\Belgelerim\RAD Studio\Projects\KoInformer\Unit2.h=C:\Documents and Settings\Swx\Belgelerim\RAD Studio\Projects\KoInformer\Unit1.h</Transaction>
+    <Transaction>2009.02.18 01:22:19.921.dfm,C:\Documents and Settings\Swx\Belgelerim\RAD Studio\Projects\KoInformer\Unit2.dfm=C:\Documents and Settings\Swx\Belgelerim\RAD Studio\Projects\KoInformer\Unit1.dfm</Transaction>
+    <Transaction>2009.02.20 18:36:47.640.cbproj,C:\Documents and Settings\Swx\Belgelerim\RAD Studio\Projects\KoInformer\Kodll.cbproj=C:\Documents and Settings\Swx\Belgelerim\RAD Studio\Projects\KoInformer\KoInformer.cbproj</Transaction>
+    <Transaction>2009.02.20 20:41:42.218.cbproj,C:\Documents and Settings\Swx\Belgelerim\RAD Studio\Projects\KoInformer\KoInformer.cbproj=C:\Documents and Settings\Swx\Belgelerim\RAD Studio\Projects\KoInformer\KoDll.cbproj</Transaction>
+    <Transaction>2009.02.23 22:53:12.945.cbproj,C:\Users\Swixdorf\Documents\RAD Studio\Projects\KoInformer\KoDll.cbproj=C:\Users\Swixdorf\Documents\RAD Studio\Projects\KoInformer\KoInformer.cbproj</Transaction>
+    <Transaction>2009.04.28 22:10:52.442.cbproj,C:\Users\Swixdorf\Documents\RAD Studio\Projects\KoInformer\KoInformer.cbproj=C:\Users\Swixdorf\Documents\RAD Studio\Projects\KoInformer\dinput8.cbproj</Transaction>
+    <Transaction>2009.04.28 22:11:05.296.cbproj,C:\Users\Swixdorf\Documents\RAD Studio\Projects\KoInformer\dinput8.cbproj=C:\Users\Swixdorf\Documents\RAD Studio\Projects\KoInformer\KoInformer.cbproj</Transaction>
+    <Transaction>2011.09.19 15:22:37.441.cbproj,C:\Users\Hog\Desktop\son claismalarim 18.09.2011\Fresh\loaderdll\KoInformer.cbproj=C:\Users\Hog\Desktop\son claismalarim 18.09.2011\Fresh\loaderdll\loader.cbproj</Transaction>
+    <Transaction>2012.06.22 19:35:37.877.rc,G:\procelerim\LAPTOP\boot gurup eu-usko\euko 28.05.2012\loaderdll\dll.rc=</Transaction>
+  </Transactions>
+	<ProjectSortOrder AutoSort="0" SortType="0">
+		<File Path="korootkit.cpp"/>
+		<File Path="korootkit.h"/>
+		<File Path="PacketAnalyze.h"/>
+		<File Path="Converters.h"/>
+		<File Path="hook.h"/>
+		<File Path="Login.h"/>
+		<File Path="Merchant.h"/>
+		<File Path="Unit1.cpp"/>
+		<File Path="Unit1.cpp"/>
+		<File Path="Unit1.dfm"/>
+		<File Path="Unit1.h"/>
+		<File Path="koclass.cpp"/>
+		<File Path="koclass.cpp"/>
+		<File Path="koclass.h"/>
+		<File Path="kothread.cpp"/>
+		<File Path="kothread.cpp"/>
+		<File Path="kothread.h"/>
+	</ProjectSortOrder>
+</BorlandProject>

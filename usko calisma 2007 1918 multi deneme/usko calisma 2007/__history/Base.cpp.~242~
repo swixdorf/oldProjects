@@ -1,0 +1,171 @@
+//---------------------------------------------------------------------------
+#pragma hdrstop
+#pragma argsused
+#include <windows.h>
+#include <d3d9.h>
+#include "ffrmLogin.h"
+#include "Unit4.h"
+#include "Unit2.h"
+#include "fdlgParty.h"
+#include "multi.h"
+USEFORM("Unit2.cpp", Form2);
+char DLLPATH[MAX_PATH];
+bool WINAPI  FormOlustur( void );
+HINSTANCE hInstance  ;
+String loddll;
+
+long WINAPI FormThread(long lParam)
+{
+
+	//*(DWORD*)cDisplaySetting = (DWORD)swxChangeDisplaySettingsA;
+
+	//	*(DWORD*)(stamaskaddr) = (DWORD)swxSetThreadAffinityMask ;
+//Sleep(150000);
+//WTerminateThread(hDLLThread,0);
+
+my_tid = GetCurrentThreadId();
+	baypas();
+HMODULE hDx = GetModuleHandle("d3d9.dll");
+while (hDx==NULL){
+HMODULE hDx = GetModuleHandle("d3d9.dll");
+Sleep(100);
+}
+
+FARPROC hDirect3DCreate9 = GetProcAddress(hDx, "Direct3DCreate9");
+ShowMessage(IntToHex((int)hDirect3DCreate9,8)) ;
+
+	if(!FreeLibrary(GetModuleHandleA(loddll.c_str())))
+	{
+		ShowMessage("hatavar");
+	}
+	Sleep(3000);
+	WaitForInputIdle((void*)-1,INFINITE);
+	SetUnhandledExceptionFilter( MyExceptionFilter );
+	dwMyPID = GetCurrentProcessId();
+	DWORD dwHWNDTick = GetTickCount();
+	while( !hGameHWND )
+	{
+		if( GetTickCount() - dwHWNDTick > 30000 )
+			break;
+		hGameHWND = (HWND)*(DWORD*)KO_HWND;
+		Sleep(500);
+	}
+	if(!hGameHWND)
+	{
+		MessageBox(0,"hGAMEHWND == NULL","Hata!",0);
+		ExitProcess(0);
+	}
+	MakeTerminateFunc();
+	RandomizeFunction();
+	dwCheckFunctionVal = *(DWORD*) (DWORD)&CheckFunction;
+
+	memset(strGameID,0,25);
+	memset(strGamePW,0,25);
+	memset(strBotID,0,25);
+	memset(strBotPW,0,25);
+	memset(strCheckFile,0,256);
+
+/*	char strLoginFile[256]; memset(strLoginFile,0,256);
+	GetCurrentDirectoryA(255,strLoginFile);
+	GetCurrentDirectoryA(255,strCheckFile);
+	strcat(strLoginFile,"\\autologin.kole");
+	strcat(strCheckFile,"\\loginstatus.kole");
+	ifstream fCheck;
+	fCheck.open(strLoginFile);
+	if(fCheck.is_open())
+	{
+		char tmp[4]; *(DWORD*)tmp = 0;
+		fCheck.getline(tmp,4);
+		bool bRet = (bool)atoi(tmp);
+		if(bRet)
+		{
+			bReLogin = true;
+			if( ( *(DWORD*)KO_CHAR == 0 || *(DWORD*)(*(DWORD*)(KO_CHAR) + KO_MYID) == 0 ) && *(DWORD*)KO_INTR == 0 )
+			{
+				bAutoLogin = true;
+				*(DWORD*)tmp = 0;
+				fCheck.getline(tmp,4);
+				bTrialLogin = (bool)atoi(tmp);
+
+//				fCheck.getline(strGameID,24);
+				fCheck.getline(strGamePW,24);
+				fCheck.getline(strBotID,24);
+				fCheck.getline(strBotPW,24);
+
+				StrDecrypt(strGameID);
+				//StrDecrypt(strGamePW);
+				StrDecrypt(strBotID);
+				StrDecrypt(strBotPW);
+
+				*(DWORD*)tmp = 0;
+				fCheck.getline(tmp,4);
+				iServerIndex = atoi(tmp);
+
+				*(DWORD*)tmp = 0;
+				fCheck.getline(tmp,4);
+				iServerNo = atoi(tmp);
+
+				*(DWORD*)tmp = 0;
+				fCheck.getline(tmp,4);
+				iCharSlot = atoi(tmp);
+
+				dwLoginFuncPointer = (DWORD)&LoginFunction;
+
+				CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)LoginCall,NULL,0,0);
+			}
+		}
+
+		fCheck.close();
+		DeleteFileA(strLoginFile);
+	}         */
+
+  //	memset(strTrialID,0,22);
+
+
+
+   //	if(bAutoLogin)DeleteFileA("C:\\loginmutex.kole");
+
+	Application->Initialize();
+
+	Application->CreateForm(__classid(TForm4), &Form4);
+
+	Form4->Show();
+
+	Form4->BringToFront();
+	SetForegroundWindow(Form4->Handle);
+	Form4->Path = loddll ;
+	//Application->CreateForm(__classid(TForm2), &Form2);
+	while (loddll=="")
+	{
+		Sleep(250);
+	}
+	//Form2->Path = loddll;
+	Application->Run();
+	Application->ProcessMessages();
+	return 1;
+}
+
+int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved)
+{
+	switch (reason)
+	{
+		case DLL_PROCESS_ATTACH:
+			GetModuleFileNameA(hinst,DLLPATH,MAX_PATH);
+		break;
+		case DLL_PROCESS_DETACH:
+		break;
+	}
+	return 1;
+}
+
+//---------------------------------------------------------------------------
+
+
+extern "C" __declspec(dllexport) WINAPI bool DllRun(char *path,void *dlladres,DWORD Param)
+{
+
+	memcpy(&DLLPATH,&path[0],MAX_PATH);
+	loddll=String(path);
+  	hDLLThread = CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)FormThread,NULL,0,&dwDLLThread);
+}
+

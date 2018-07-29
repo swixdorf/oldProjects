@@ -1,0 +1,87 @@
+//---------------------------------------------------------------------------
+
+#ifndef Unit1H
+#define Unit1H
+//---------------------------------------------------------------------------
+#include <Classes.hpp>
+#include <Controls.hpp>
+#include <StdCtrls.hpp>
+#include <Forms.hpp>
+#include <ScktComp.hpp>
+#include <CheckLst.hpp>
+#include <Menus.hpp>
+#include <ExtCtrls.hpp>
+#include <jpeg.hpp>
+#include <ComCtrls.hpp>
+//---------------------------------------------------------------------------
+class TForm1 : public TForm
+{
+__published:	// IDE-managed Components
+	TClientSocket *ClientSocket1;
+	TButton *Button1;
+	TButton *Button2;
+	TButton *Button3;
+	TButton *Button4;
+	TButton *Button5;
+	TButton *Button6;
+	TPopupMenu *PopupMenu1;
+	TMenuItem *ayarlar1;
+	TMenuItem *durdur1;
+	TMenuItem *ayarlar2;
+	TMemo *Memo2;
+	TComboBox *ComboBox1;
+	TButton *Button10;
+	TPageControl *PageControl1;
+	TCheckListBox *CheckListBox1;
+	TListBox *ListBox2;
+	TButton *Button9;
+	TButton *Button8;
+	TMemo *Memo3;
+	TGroupBox *GroupBox1;
+	TEdit *Edit1;
+	TButton *Button7;
+	TListBox *ListBox1;
+	TMemo *Memo1;
+	TImage *Image1;
+	TProgressBar *ProgressBar1;
+	TTimer *Timer1;
+	TCheckBox *CheckBox1;
+	TTimer *Timer2;
+	void __fastcall Button1Click(TObject *Sender);
+	void __fastcall ClientSocket1Read(TObject *Sender, TCustomWinSocket *Socket);
+	void __fastcall CheckListBox1ClickCheck(TObject *Sender);
+	void __fastcall Button2Click(TObject *Sender);
+	void __fastcall Button3Click(TObject *Sender);
+	void __fastcall Button4Click(TObject *Sender);
+	void __fastcall Button5Click(TObject *Sender);
+	void __fastcall Button6Click(TObject *Sender);
+	void __fastcall ayarlar1Click(TObject *Sender);
+	void __fastcall durdur1Click(TObject *Sender);
+	void __fastcall ayarlar2Click(TObject *Sender);
+	void __fastcall Button7Click(TObject *Sender);
+	void __fastcall Edit1KeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall FormResize(TObject *Sender);
+	void __fastcall CheckListBox1Click(TObject *Sender);
+	void __fastcall ClientSocket1Connect(TObject *Sender,
+          TCustomWinSocket *Socket);
+	void __fastcall ClientSocket1Disconnect(TObject *Sender,
+          TCustomWinSocket *Socket);
+	void __fastcall ClientSocket1Error(TObject *Sender, TCustomWinSocket *Socket,
+          TErrorEvent ErrorEvent, int &ErrorCode);
+	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+	void __fastcall Button8Click(TObject *Sender);
+	void __fastcall Button9Click(TObject *Sender);
+	void __fastcall Button10Click(TObject *Sender);
+	void __fastcall FormShow(TObject *Sender);
+	void __fastcall PageControl1Change(TObject *Sender);
+	void __fastcall Timer1Timer(TObject *Sender);
+	void __fastcall CheckBox1Click(TObject *Sender);
+private:	// User declarations
+public:		// User declarations
+	__fastcall TForm1(TComponent* Owner);
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TForm1 *Form1;
+//---------------------------------------------------------------------------
+#endif

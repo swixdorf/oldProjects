@@ -1,0 +1,359 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 532
+  ClientWidth = 935
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  OnResize = FormResize
+  PixelsPerInch = 96
+  TextHeight = 13
+  object ListBox2: TListBox
+    Left = 183
+    Top = 8
+    Width = 66
+    Height = 257
+    ItemHeight = 13
+    TabOrder = 0
+  end
+  object Memo1: TMemo
+    Left = 759
+    Top = 8
+    Width = 172
+    Height = 217
+    Lines.Strings = (
+      'Memo1')
+    TabOrder = 2
+    WordWrap = False
+  end
+  object Button7: TButton
+    Left = 678
+    Top = 327
+    Width = 75
+    Height = 25
+    Caption = 'save'
+    TabOrder = 3
+    OnClick = Button7Click
+  end
+  object CheckListBox1: TCheckListBox
+    Left = 8
+    Top = 8
+    Width = 169
+    Height = 257
+    OnClickCheck = CheckListBox1ClickCheck
+    ItemHeight = 13
+    TabOrder = 4
+    OnClick = CheckListBox1Click
+    OnDblClick = CheckListBox1DblClick
+  end
+  object Memo2: TMemo
+    Left = 215
+    Top = 271
+    Width = 185
+    Height = 89
+    Lines.Strings = (
+      'Memo2')
+    TabOrder = 5
+    Visible = False
+  end
+  object Button8: TButton
+    Left = 466
+    Top = 269
+    Width = 75
+    Height = 25
+    Caption = 'itemler'
+    TabOrder = 6
+    OnClick = Button8Click
+  end
+  object Button9: TButton
+    Left = 547
+    Top = 269
+    Width = 75
+    Height = 25
+    Caption = 'Button9'
+    TabOrder = 7
+    OnClick = Button9Click
+  end
+  object GroupBox2: TGroupBox
+    Left = 0
+    Top = 439
+    Width = 935
+    Height = 93
+    Align = alBottom
+    Caption = 'GroupBox2'
+    TabOrder = 1
+    object Button1: TButton
+      Left = 558
+      Top = 12
+      Width = 75
+      Height = 25
+      Caption = 'ekle'
+      TabOrder = 0
+      OnClick = Button1Click
+    end
+    object Edit1: TEdit
+      Left = 8
+      Top = 16
+      Width = 544
+      Height = 21
+      TabOrder = 1
+      Text = 'Edit1'
+    end
+    object Edit2: TEdit
+      Left = 8
+      Top = 41
+      Width = 121
+      Height = 21
+      TabOrder = 2
+      Text = '240000'
+    end
+    object Button2: TButton
+      Left = 135
+      Top = 37
+      Width = 75
+      Height = 25
+      Caption = 'TmunuAc'
+      TabOrder = 3
+      OnClick = Button2Click
+    end
+    object Button3: TButton
+      Left = 215
+      Top = 37
+      Width = 75
+      Height = 25
+      Caption = 'TmunuKapat'
+      TabOrder = 4
+      OnClick = Button3Click
+    end
+    object Button6: TButton
+      Left = 382
+      Top = 43
+      Width = 75
+      Height = 25
+      Caption = 'exe guncelle'
+      TabOrder = 5
+      OnClick = Button6Click
+    end
+    object Button4: TButton
+      Left = 8
+      Top = 65
+      Width = 49
+      Height = 25
+      Caption = 'basla'
+      TabOrder = 6
+      OnClick = Button4Click
+    end
+    object Button5: TButton
+      Left = 63
+      Top = 65
+      Width = 51
+      Height = 25
+      Caption = 'dur'
+      TabOrder = 7
+      OnClick = Button5Click
+    end
+  end
+  object Button10: TButton
+    Left = 469
+    Top = 340
+    Width = 75
+    Height = 25
+    Caption = 'aktar'
+    TabOrder = 8
+    OnClick = Button10Click
+  end
+  object Button11: TButton
+    Left = 550
+    Top = 340
+    Width = 75
+    Height = 25
+    Caption = 'oku'
+    TabOrder = 9
+    OnClick = Button11Click
+  end
+  object Button12: TButton
+    Left = 597
+    Top = 300
+    Width = 75
+    Height = 25
+    Caption = 'klasor kopyala'
+    TabOrder = 10
+    OnClick = Button12Click
+  end
+  object Button13: TButton
+    Left = 759
+    Top = 327
+    Width = 75
+    Height = 25
+    Caption = 'toplu id'
+    TabOrder = 11
+    OnClick = Button13Click
+  end
+  object Button14: TButton
+    Left = 840
+    Top = 327
+    Width = 75
+    Height = 25
+    Caption = 'toplu proxyip'
+    TabOrder = 12
+    OnClick = Button14Click
+  end
+  object Button15: TButton
+    Left = 840
+    Top = 358
+    Width = 75
+    Height = 25
+    Caption = 'proxy port'
+    TabOrder = 13
+    OnClick = Button15Click
+  end
+  object Button16: TButton
+    Left = 469
+    Top = 309
+    Width = 75
+    Height = 25
+    Caption = 'diz'
+    TabOrder = 14
+  end
+  object Button17: TButton
+    Left = 759
+    Top = 358
+    Width = 75
+    Height = 25
+    Caption = 'toplu pass'
+    TabOrder = 15
+    OnClick = Button17Click
+  end
+  object Button18: TButton
+    Left = 469
+    Top = 371
+    Width = 75
+    Height = 25
+    Caption = 'ayar aktar'
+    TabOrder = 16
+    OnClick = Button18Click
+  end
+  object Button19: TButton
+    Left = 550
+    Top = 371
+    Width = 75
+    Height = 25
+    Caption = 'ice aktar'
+    TabOrder = 17
+    OnClick = Button19Click
+  end
+  object Button20: TButton
+    Left = 840
+    Top = 389
+    Width = 75
+    Height = 25
+    Caption = 'proxy list'
+    TabOrder = 18
+    OnClick = Button20Click
+  end
+  object Edit3: TEdit
+    Left = 656
+    Top = 389
+    Width = 121
+    Height = 21
+    TabOrder = 19
+    Text = '4258952'
+  end
+  object Button21: TButton
+    Left = 678
+    Top = 408
+    Width = 75
+    Height = 25
+    Caption = 'Button21'
+    TabOrder = 20
+    OnClick = Button21Click
+  end
+  object Button22: TButton
+    Left = 558
+    Top = 408
+    Width = 75
+    Height = 25
+    Caption = 'Button22'
+    TabOrder = 21
+    OnClick = Button22Click
+  end
+  object ListBox1: TListBox
+    Left = 339
+    Top = 8
+    Width = 64
+    Height = 257
+    ItemHeight = 13
+    TabOrder = 22
+  end
+  object ComboBox1: TComboBox
+    Left = 434
+    Top = 412
+    Width = 63
+    Height = 21
+    ItemHeight = 13
+    TabOrder = 23
+  end
+  object ComboBox2: TComboBox
+    Left = 501
+    Top = 412
+    Width = 51
+    Height = 21
+    ItemHeight = 13
+    TabOrder = 24
+  end
+  object ListBox3: TListBox
+    Left = 255
+    Top = 8
+    Width = 78
+    Height = 257
+    ItemHeight = 13
+    TabOrder = 25
+  end
+  object Memo3: TMemo
+    Left = 759
+    Top = 226
+    Width = 88
+    Height = 57
+    Lines.Strings = (
+      '95.0.116.5')
+    TabOrder = 26
+  end
+  object Button23: TButton
+    Left = 488
+    Top = 224
+    Width = 75
+    Height = 25
+    Caption = 'dsr'
+    TabOrder = 27
+    OnClick = Button23Click
+  end
+  object Timer1: TTimer
+    Interval = 5000
+    OnTimer = Timer1Timer
+    Left = 576
+    Top = 296
+  end
+  object Timer2: TTimer
+    Enabled = False
+    Interval = 5000
+    OnTimer = Timer2Timer
+    Left = 544
+    Top = 296
+  end
+  object ServerSocket1: TServerSocket
+    Active = False
+    Port = 2587
+    ServerType = stNonBlocking
+    OnClientRead = ServerSocket1ClientRead
+    OnClientError = ServerSocket1ClientError
+    Left = 432
+    Top = 272
+  end
+end

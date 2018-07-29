@@ -1,0 +1,284 @@
+Bu, http://www.kodyaziyorum.com/printer_friendly_posts.asp?TID=810 için Google'ýn önbelleðidir. Bu, sayfanýn 30 Eki 2009 11:36:55 GMT tarihine ait anlýk görüntüsüdür. Aradan geçen süre zarfýnda geçerli sayfa deðiþmiþ olabilir. Daha fazla bilgi
+
+Salt metin sürümü
+Þu arama terimleri vurgulanmaktadýr: delphi tarih çýkarma  
+Sayfayý Yazdýr | Pencereyi Kapat
+
+Tarih ve Saat (DateTime) Fonksiyonlarý
+
+Nereden Yazdýrýldýðý: kodyaziyorum.com
+Kategori: Programlama Dilleri
+Forum Adý: Delphi
+Forum Tanýmlamasý: Türkiye' deki en eski görsel dillerden olan Delphi hakkinda hersey burada.
+URL: http://www.kodyaziyorum.com/forum_posts.asp?TID=810
+Tarih: 30/Ekim/2009 Saat 14:37
+
+
+Konu: Tarih ve Saat (DateTime) Fonksiyonlarý Mesajý Yazan: charvaka
+Konu: Tarih ve Saat (DateTime) Fonksiyonlarý
+Mesaj Tarihi: 11/Kasým/2006 Saat 03:20
+Alýntýdýr...
+ 
+Delphi her türlü tarih fonksiyonu içeren DateUtils unitini içerir. Aþaðýda bu fonksiyonlardan en çok ihtiyacýnýz olacaðýnýzý düþündüklerimi açýkladým. Her fonksiyondan sonra, bir örnek ve örneðin döndüreceði deðeri yazdým. Böylelikle konu daha açýk anlaþýlacaktýr.
+
+Günün tarihini "03/09/2002" Salý, saatini ise "11:05:03" olarak kabul ettim. Bu fonksiyonlarý kullanýrken uses kýsmýna DateUtils'i eklemeyi unutmayýn.
+
+- CompareDate : verilen iki tarihi karþýlaþtýrýr. 1. tarih büyükse 1, küçükse -1, eðer iki tarihte ayný ise 0 deðerini döndürür.
+
+            CompareDate(Date -2 , Date) = -1
+
+    NOT : Tarihler üzerinde direk toplama ve çýkarma iþlemi yapabilirsiniz. "Date -2" iki gün öncesinin tarihini verecektir.                         
+
+- CompareDateTime : verilen iki tarih ve saat içeren datetime deðerini karþýlaþtýrýr. 1. deðer büyükse 1, küçükse -1, her iki tarihsaat deðeri ayný ise 0 döndürür. Burada deðerin ayný olmasý demek yýl'dan baþlayark saliseye kadar tüm deðerlerin ayný olmasý demektir.
+
+- CompareTime : verilen iki saat deðerini karþýlaþtýrýr. 1. deðer büyükse 1, küçükse -1, iki deðerde ayný ise 0 döndürür.
+
+- CurrentYear : Geçerli yýl bilgisini 4 karakter olarak döndürür. 2002 gibi. 
+
+            CurrentYear = 2002   
+
+- Date : Geçerli tarihi döndürür.
+
+            Date = 03/09/2002     
+
+- DateOf : Bir datetime deðerini alarak bunun sadece tarih kýsmýný döndürür. Aslýnda burada saat bilgisi silinmez, "00:00:00" yani geceyarýsýný gösterecek þekilde deðiþtirilir. Yani tarih ve saat ayrýlmaz ikilidir. Sürekli beraberdirler.
+
+            DateOf ( Now ) = 03/09/2002
+
+- DateTimeToStr : Verilen bir DateTime deðerini string'e çevirir.
+
+            DateTimeToStr ( Now ) = '03/09/2002 11:05:03'
+
+- DateTimeToString : Verilen bir DateTime deðerini istediðiniz formatta string'e çevirir.
+
+            var
+              Str : String;
+           
+              DateTimeToString(Str, 'd mmmm yyyy dddd, hh:nn', Now);
+              ShowMessage ( Str );  = 3 Eylül 2002 Salý, 11:05
+
+- DateToStr : verilen bir DateTime deðerini string'e çevirir. Sonuçta sadece tarih verisi bulunur, saat olmaz.
+
+            DateToStr ( Date) = '03/09/2002'
+
+- DayOf : Verilen bir DateTime deðerindeki günü döndürür. Yani sonuç 1 ile 31 arasýnda bir deðer olabilir.
+
+            DayOf ( Date ) = 3
+
+- DayOfTheMonth : DayOf fonksiyonu ile tamamen aynýdýr.
+
+            DayOfTheMonth ( Date ) = 3
+
+- DayOfTheWeek : Haftanýn kaçýncý günü olduðunu döndürür. Pazartesi ise 1, Salý ise 2, ... Pazar ise 7 döndürür.
+
+            DayOfTheWeek ( Date ) = 2
+
+- DayOfTheYear : Yýlýn kaçýncý günü olduðunu döndürür.
+
+            DayOfTheYear ( Date ) = 246
+
+- DayOfWeek : Haftanýn kaçýncý günü olduðunu döndürür. Bu fonksiyonun farký Pazar günü ilk gün sayýlýr. Yani Pazar ise 1, Pazartesi 2 ... Cumartesi ise 7 döndürür.
+
+            DayOfWeek ( Date ) = 3
+
+- DaysBetween : verilen iki DateTime arasýndaki geçen gün sayýsýný döndürür. Bu fonksiyonda saatte önemlidir. 24 saat geçmiþ olmalýdýr. Yani "02/09/2002 11:54:00" ile "03/09/2002 11:53:59" arasýndaki gün sayýsý 24 saat dolmadýðý için 0 dýr.
+
+- DaysInAMonth : Verilen yýl ve aydaki gün sayýsýný döndürür.
+
+            DaysInAMonth (2002, 5) = 31
+
+- DaysInAYear : Verilen yýlda kaç gün olduðunu döndürür.
+
+            DaysInAYear ( 2002 ) = 365
+
+- DaysInMonth : Verilen tarihteki ayýn kaç gün olduðunu hesaplar. Yani yýl ve ay deðerini verdiðiniz tarihten alýr.
+
+            DaysInMonth ( Date ) = 30
+
+- DaysInYear : Verilen tarihteki yýlda kaç gün olduðunu döndürür. Yani yýl deðerini verdiðiniz tarihten alýr.
+
+            DaysInYear ( Date ) = 365
+
+- DaySpan : Verilen iki DateTime deðeri arasýndaki gün farkýný bulur. DaysBetween fonksiyonundan farký, küsratlý deðerler döndürür. Yani iki tarih arasýnda 1 gün 23 saat ve 58 dakika fark varsa DaySpan : "1,998611" deðerini döndürür, DaysBetween gün tamamlanmadýðý için 1 deðerini döndürür.
+
+- DecodeDate : Verilen DateTime deðerini yýl, ay ve gün deðerlerini döndürür.
+
+            var
+              Yil, Ay, Gun : word;
+
+            DecodeDate ( Date, Yil, Ay, Gun);
+
+- DecodeDateDay : Verilen DateTime deðerinin yýl ve verilen tarihinde yýlýn kaçýncý günü olduðunu döndürür. 2002 ve 246. gün gibi.
+
+- DecodeDateTime : Verilen DateTime deðerinin yýl, ay, gün, saat, dakika, saniye, salise deðerlerini döndürür.
+
+            var
+              yil, ay, gun, saat, dakika, saniye, salise : Word;
+
+            DecodeDateTime ( Now, yil, ay, gun, saat, dakika, saniye, salise);
+
+- DecodeDateWeek : Verilen DateTime deðerinin yýlýný, yýlýn kaçýncý haftasý olduðunu ve haftanýn kaçýncý günü olduðunu döndürür.
+
+- DecodeTime : Verilen DateTime deðerinin saat, dakika, saniye ve salise deðerlerini döndürür.
+
+            var
+              saat, dakika, saniye, salise : Word;
+
+            DecodeTime ( Now, saat, dakika, saniye, salise);
+
+- EncodeDate : Verilen yýl, ay, gün deðerlerini birleþtirip oluþan tarih deðerini döndürür.
+
+            var
+              Tarih : TDateTime;
+
+            Tarih := EncodeDate (2002, 10, 5); = 05/10/2002
+
+- TryEncodeDate : Verilen yýl, ay, gün deðerlerini birleþtirip oluþan tarih deðerini döndürür. Eðer yanlýþ deðerler verilmiþse fonksiyon False deðerini geri döndürür, tarih baþarýyla birleþtirilmiþse True deðerini döndürür.
+
+            var
+              Tarih : TDateTime;
+
+            if TryEncodeDate(2002, 10, 5, Tarih) then
+              ShowMessage (' tarih baþarýyla birleþtirildi!');
+
+- EndOfAMonth : Verilen yýl ve ayýn son günü ve son anýný döndürür.
+
+            EndOfAMonth (2002, 5) = 31/05/2002 23:59:59
+
+- FormatDateTime : Verilen DateTime deðerini istediðiniz formatta göstermek için kullanýlýr.
+
+            FormatDateTime ('d mmmm yyyy', Date) = '3 Eylül 2002'
+
+- HourOf, HourofTheDay : Verilen DateTime deðerinin saatini döndürür. Yani sonuç 0 ile 23 arasýndadýr.
+
+            HourOf (Now) = 11
+
+- HoursBetween : Verilen iki DateTime deðeri arasýnda geçen saati döndürür. Fonksiyon 60 dakika tamamlanýnca deðeri arttýrýr. Yani 12:00:00 ile 12:59:59 arasýndaki fark 0 (sýfýr) dýr, ancak 13:00:00 olduðunda 1 döndürür.
+
+- HourSpan : Verilen iki DateTime deðeri arasýnda geçen saati döndürür. Yukarýdaki fonksiyondan farký saat tam olmasa bile deðeri küsuratlý olarak döndürür. Mesela 12:00:00 ile 12:59:59 arasýndaki saat farký 0,9998 saat gibi.
+
+- IncMonth : Verilen tarihi, istenilen ay kadar artýrýr veya azaltýr. 
+      o Eðer parametre - verilirse önceki aylarý döndürür. Örneðin -1 verilirse bir ay önceki tarihi döndürür.
+      o Eðer parametre 1 den büyük bir deðer verilirse o kadar ay sonrasýný döndürür.
+      o Eðer tarih arttýrýldýðý zaman verilen gün o ay içerinde yoksa, o ayýn son günü döndürülür. Mesela 31/01/2002 tarihini bir ay artýrýrsanýz þubat ayýnda 31. gün olmadýðý için sonuç 28/02/2002 olacaktýr.
+
+            IncMonth ( Date ) = 03/10/2002 
+
+- IncDay : Verilen tarihi istenilen gün kadar artýrýr veya azaltýr. Parametre + verilirse artýrýr, - verilirse azaltýr. 
+
+            IncDay ( Date ) = 04/09/2002
+            IncDay ( Date, 3 ) = 06/09/2002
+            IncDay ( Date, -1) = 02/09/2002
+
+- IncHour : Verilen DateTime deðerinin saatinin istenilen deðer kadar artýrýr veya azaltýr. Benzer þekilde IncMinute, IncMilisecond, IncSecond fonksiyonlarý da vardýr.
+
+- IncWeek : Verilen tarihi istenilen hafta sayýsý kadar artýrýr veya azaltýr. Parametre + verilirse artýrýr, - verilirse azaltýr.
+
+            IncWeek ( Date ) = 10/09/2002
+
+- IncYear : Verilen tarihin senesini istediðinz kadar artýrýr veya azaltýr. Parametre + verilirse artýrýr, - verilirse azaltýr.
+
+            IncYear ( Date ) = 03/09/2003
+            IncYear ( Date, -2) = 03/09/2000
+
+- IsInLeapYear : Verilen tarihin artýk bir senede (Þubat'ýn 29 gün olduðu) olup olmadýðýný test eder.
+
+            if IsInLeapYear (Date) then
+              ShowMessage (' 2002 senesi artýk yýl olmadýðý için, bu mesajý asla göremezsiniz!');
+
+- IsLeapYear : Verilen senenin artýk sene (Þubat'ýn 29 gün olduðu) olup olmadýðýný test eder.
+
+            if IsLeapYear ( CurrentYear ) then
+              ShowMessage (' Bu sene Þubat ayý 29 gün çekiyor');
+
+- IsToday : Verilen tarihin bugünün tarihi olup olmadýðýný test eder. Ayný gün ise True döndürür.
+
+            if IsToday ( Date ) then
+              ShowMessage ( 'Date bugünün tarihini verdiði için bu mesajý görürsünüz');
+
+- IsValidDate : Verilen yýl, ay, gün deðerlerinin geçerli bir tarih olup olmadýðýný test eder. Örneðin ay 2 ve gün 30 ise, Þubat hiç bir zaman 30 gün olamayacaðý için False döndürür.
+
+            if IsValidDate (2002, 10, 1) then
+              ShowMessage ('geçerli bir tarihtir');
+
+- IsValidDateTime : Verilen yýl, ay, gün, saat, dakika, saniye, salise deðerlerinin geçerli bir DateTime deðeri olup olmadýðýn test eder. Geçerli ise True, deðilse False döndürür.
+
+            if not IsValidDateTime ( 2002, 13, 5, 11, 11, 11, 11 ) then
+              ShowMessage (' ay hiç bir zaman 13 olamaz, 1 ile 12 arasý bir deðer olamlýdýr!');
+
+- IsValidTime : Verilen saat, dakika, saniye, salise deðerlerinin geçerli bir saat deðeri olup olmadýðýn test eder. Geçerli ise True, deðilse False döndürür.
+
+            if not IsValidTime (30, 11, 10, 1) then 
+              ShowMessage (' saat 23'' ten büyük olamayacaðý için geçersiz bir tarihtir');
+
+- MinutesBetween : Verilen iki tarih arasýndaki dakika farkýný verir. Dakika tam olduðu zaman deðeri artýrýr. Örneðin 9:00:00 ile 9:00:59 arasýndaki farký 0 (sýfýr) olarak döndürür.
+
+- MinuteSpan : Verilen iki tarih arasýndaki dakika farkýný verir. Dakika tam olmasa bile küsuratlý olarak deðeri döndürür. Örneðin 9:00:00 ile 9:00:59 arasýndaki farký 0,998 dakika gibi döndürür.
+
+- MonthOf : Verilen tarihin ayýný döndürür. Yani sonuç 1 ile 12 arasýnda bir deðer olmalýdýr.
+
+            MonthOf ( Date ) = 9
+
+- MonthsBetween : Verilen iki tarih arasýndaki ay farkýný verir. Aylarýn uzunluklarý eþit olmadýðý için bir ay 30.4375 gün olarak belirlenmiþtir. Her 30.4375 gün için deðer 1 arttýrýlýr.
+
+- MonthSpan : Verilen iki tarih arasýndaki ay farkýný verir. 1 ay yine 30.4375 gün olarak belirlenmiþtir. Süre tamalanmasa bile küsuratlý olarak deðeri döndürür.
+
+- Now : Geçerli tarih ve saati döndürür.
+
+            Now = 03/09/2002 11:05:03
+
+- NthDayOfWeek : Verilen tarihteki günün, o ay içindeki kaçýncý iþ günü olduðunu döndürür. Mesela gün Salý ve ayýn ikinci Salýsý ise 2 döndürür.
+
+            NthDayOfWeek ( Date ) = 1
+
+- StartOfAMonth : Verilen yýl ve aydaki ilk günün ilk anýný döndürür.
+
+            StartOfAMonth (2002, 5) = 01/05/2002 00:00:00
+
+- StrToDate: Verilen stringi tarih deðerine çevirir.
+
+            StrToDate ('01/01/2002') = 01/01/2002
+
+- StrToDateTime : Verilen stringi DateTime deðerine çevirir.
+
+            StrToDateTime ('01/01/2002 05:22:00') = 01/01/2002 05:22:00
+
+- Time : Geçerli saati döndürür.
+
+            Time = 11:05:03
+
+- TimeToStr : Verilen saat deðerini stringe çevirir.
+
+            TimeToStr ( Time ) = '11:05:03'
+
+- Today : Bugünün tarihini döndürür.
+
+            Today = 03/09/2002
+
+- Tomorrow : Ertesi günün (yarýn) tarihini döndürür.
+
+            Tomorrow = 04/09/2002
+
+- YearOf : Verilen tarihin yýlýný döndürür.
+
+            YearOf ( Date ) = 2002
+
+- YearsBetween : Verilen iki tarih arasýndaki yýl farkýný döndürür.
+
+- Yesterday : Bir önceki günün (dün) tarihini döndürür.
+
+            Yesterday = 02/09/2002
+
+ 
+
+DateUtils uniti içinde bunun en az iki katý daha fonksiyon var. Ben en çok kullandýklarýmý ve lazým olabileceðini düþündüklerimi burada açýkladým. Listenin tamamýný görmek için, Help'ten "date/time routines" kýsmýna bakýn.
+ 
+Alýntýdýr...
+
+
+-------------
+MasteR c0deR
+
+
+Sayfayý Yazdýr | Pencereyi Kapat
+

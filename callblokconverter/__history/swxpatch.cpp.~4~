@@ -1,0 +1,26 @@
+//---------------------------------------------------------------------------
+
+
+#pragma hdrstop
+
+#include "swxpatch.h"
+
+//---------------------------------------------------------------------------
+
+Cswxpatch::InitPatch()
+{
+	for (int i = 0; i < 100; i++)
+	{
+		if (!Locations[i].Active)continue;
+	}
+}
+Cswxpatch::AddAddr(DWORD paddr,BYTE pstate,DWORD pnewaddr)
+{
+	for (int i = 0; i < 100; i++)
+	{
+		if (!Locations[i].Active)
+		{
+            Locations[i]
+		}
+	}
+}

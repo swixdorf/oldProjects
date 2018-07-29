@@ -1,0 +1,1175 @@
+??? ?? ?? ? :
+: ??? ?? ???? ????? ??????? ????? ??? ?? ??? ? ????
+: ?? ? ??? ???? 
+: ??????
+: ??? ??? ???????? ??????? ?????
+: //$$---- Form CPP ----
+: //---------------------------------------------------------------------------
+: 
+: #include <vcl.h>
+: #include <mshtml.h>
+: #include <stdio.h>
+: #pragma hdrstop
+: 
+: #include "TMain.h"
+: //---------------------------------------------------------------------------
+: #pragma package(smart_init)
+: #pragma link "SHDocVw_OCX"
+: #pragma resource "*.dfm"
+: TForm1 *Form1;
+: 
+: AnsiString g_sId="fuck84";
+: AnsiString g_sPw="cpjj11";
+: 
+: const int MAIN=10;
+: const int LOGIN=20;
+: const int SRH_RESULT=30;
+: const int SRH_RESULT_SAVE=40;
+: const int SRH_NEXTPAGE=50;
+: const int STOP=60;
+: 
+: int nStep=0;
+: //---------------------------------------------------------------------------
+: __fastcall TForm1::TForm1(TComponent* Owner)
+: 	: TForm(Owner)
+: {
+:         Timer1->Enabled=false;
+: 	m_nCallNum=0;
+: }
+: //---------------------------------------------------------------------------
+: 
+: __fastcall TForm1::~TForm1()
+: {
+:     if (m_pHTMLDocument!=NULL)
+:         m_pHTMLDocument->Release();
+: 
+:     if (m_pHTMLDocument1!=NULL)
+:         m_pHTMLDocument1->Release();
+: 
+:     if (m_pHTMLElement!=NULL)
+:         m_pHTMLElement->Release();
+: }
+: //---------------------------------------------------------------------------
+: 
+: void __fastcall TForm1::goWebPage(AnsiString f_sURL)
+: {
+: 	WebBrowser->Navigate(WideString(f_sURL), EmptyParam, EmptyParam, EmptyParam, EmptyParam);
+: }
+: //---------------------------------------------------------------------------
+: 
+: void __fastcall TForm1::btnAutoClick(TObject *Sender)
+: {
+:     if (nStep<20) {
+:         nStep=MAIN;
+:         AnsiString sURL="http://www.wedisk.co.kr/";
+:         goWebPage(sURL);
+:     }
+:     else {
+:         btnSrhSubmitClick(NULL);
+:     }
+: }
+: //---------------------------------------------------------------------------
+: 
+: 
+: void __fastcall TForm1::MyMessage(TMessage &Msg)
+: {
+:     if(Msg.Msg==WM_LOGIN)   {
+:         TestLog("[Login Click !!!");
+:         btnLoginClick(NULL);
+:     }
+:     else if (Msg.Msg==WM_SRH_KEYWORD_INPUT) {
+:         HRESULT hr;
+:         IHTMLElementCollection* pElementCol1=NULL;
+:         hr=m_pHTMLDocument1->get_all(&pElementCol1);
+:         if (FAILED(hr)) return;
+: 
+:         long lElementCol1Cnt=0;
+:         pElementCol1->get_length (&lElementCol1Cnt);
+: 
+:         btnKeywordInputClick(NULL);
+: 
+:         m_pHTMLElement=doHTMLImgClick(pElementCol1, "http://www.wedisk.co.kr/img/search_bt_03.gif");
+: 
+:         Timer1->Interval=1000;
+:         Timer1->Enabled=true;
+:     }
+:     else if (Msg.Msg==WM_SRH_RESULT) {
+:         Timer1->Interval=1000;
+:         Timer1->Enabled=true;
+:     }
+:     else if (Msg.Msg==WM_SRH_RESULT_SAVE) {
+:         Timer1->Interval=1000;
+:         Timer1->Enabled=true;
+:     }
+: }
+: //---------------------------------------------------------------------------
+: 
+: LPDISPATCH g_pCurDisp=NULL;
+: void __fastcall TForm1::WebBrowserNavigateComplete2(TObject *Sender, LPDISPATCH pDisp, Variant *URL)
+: {
+: 	if (!g_pCurDisp)
+: 		g_pCurDisp=pDisp; // save for comparison ; OnDocumentComplete ??? ????? ???? ??
+: 
+:     // mmURL->Lines->Add("\n\rNavigateComplete2 nStep:["+IntToStr(nStep)+"]");
+: }
+: //---------------------------------------------------------------------------
+: 
+: void __fastcall TForm1::WebBrowserNewWindow2(TObject *Sender, LPDISPATCH *ppDisp,
+: 	  VARIANT_BOOL *Cancel)
+: {
+: 	*Cancel=true;
+: }
+: //---------------------------------------------------------------------------
+: 
+: void __fastcall TForm1::WebBrowserDocumentComplete(TObject *Sender,
+: 	  LPDISPATCH pDisp, Variant *URL)
+: {
+:     if (WebBrowser->ReadyState==::READYSTATE_COMPLETE) {
+:         IDispatch *pDocument=NULL;
+:         pDocument=WebBrowser->Document;
+: 
+:         if (pDisp==g_pCurDisp) {
+:             HRESULT hr;
+: 
+:             if (m_pHTMLDocument!=NULL)
+:                 m_pHTMLDocument->Release();
+: 
+:             if (m_pHTMLDocument1!=NULL)
+:                 m_pHTMLDocument1->Release();
+: 
+:             hr=pDocument->QueryInterface(IID_IHTMLDocument2,(void**)&m_pHTMLDocument);
+:             if (FAILED(hr)) return;
+: 
+:             IHTMLFramesCollection2* pFramesCol;
+:             hr=m_pHTMLDocument->get_frames(&pFramesCol);
+:             if (FAILED(hr)) return;
+: 
+:             long lFCLen = 0;
+:             pFramesCol->get_length(&lFCLen);
+:             TestLog("Frame Count:["+FloatToStr(lFCLen)+"]");
+: 
+:             VARIANT frameRequested;
+:             VARIANT frameOut;
+:             IHTMLWindow2* pRightFrameWindow;
+:             IHTMLDocument2* pRightDoc;
+: 
+:             frameRequested.vt = VT_BSTR;
+:             frameRequested.bstrVal = L"main";
+: 
+:             hr = pFramesCol->item(&frameRequested, &frameOut);
+:             if (FAILED(hr)) return;
+: 
+:             hr = frameOut.pdispVal->QueryInterface(IID_IHTMLWindow2, (void**)&pRightFrameWindow);
+:             if (FAILED(hr)) return;
+: 
+:             hr = pRightFrameWindow->get_document(&pRightDoc);
+:             if (FAILED(hr)) return;
+:             pRightFrameWindow->Release();
+: 
+:             m_pHTMLDocument1=pRightDoc;
+: 
+:             pFramesCol->Release();
+:             g_pCurDisp=NULL;
+: 
+:             AnsiString sURL=URL->bstrVal;
+:             //mmURL->Lines->Add(sURL);
+:             if (sURL==L"http://www.wedisk.co.kr/" ||
+:                 sURL.Pos("http://www.wedisk.co.kr/wedisk/search.jsp")>0) {
+:                 mmURL->Lines->Add("\n\r==============>[Page Loading Completed!!!] nStep:["+IntToStr(nStep)+"]");
+: 
+:                 if (nStep==MAIN) {
+:                     PostMessage(Handle, WM_LOGIN, NULL, NULL);
+:                 }
+:                 else if (nStep==LOGIN) {
+:                     PostMessage(Handle, WM_SRH_KEYWORD_INPUT, NULL, NULL);
+:                 }
+:                 else if (nStep==SRH_RESULT || nStep==SRH_NEXTPAGE) {
+:                     PostMessage(Handle, WM_SRH_RESULT_SAVE, NULL, NULL);
+:                 }
+:             }
+:         }
+:         pDocument->Release();
+:     }
+: }
+: //---------------------------------------------------------------------------
+: 
+: void __fastcall TForm1::btnCallScriptClick(TObject *Sender)
+: {
+: 	if (m_pHTMLDocument1==NULL)
+: 		return;
+: /*
+:     DISPPARAMS dispParams;
+: 	OleVariant vParams="1";
+: 	dispParams.rgvarg =vParams;
+: 	dispParams.cArgs = 0; // parameter cnt
+: 	dispParams.rgdispidNamedArgs = NULL;
+: 	dispParams.cNamedArgs = 0;
+: 	CallHTMLScript(m_pHTMLDocument1, "chkLoginSubmit", dispParams);
+: */
+:     doCallScriptClick("chkLoginSubmit");
+: }
+: //---------------------------------------------------------------------------
+: 
+: void __fastcall TForm1::doCallScriptClick(AnsiString f_sFunction)
+: {
+: 	if (m_pHTMLDocument1==NULL)
+: 		return;
+: 
+:     DISPPARAMS dispParams;
+: 	OleVariant vParams="1";
+: 	dispParams.rgvarg =vParams;
+: 	dispParams.cArgs = 0; // parameter cnt
+: 	dispParams.rgdispidNamedArgs = NULL;
+: 	dispParams.cNamedArgs = 0;
+: 	CallHTMLScript(m_pHTMLDocument1, f_sFunction, dispParams);
+: }
+: //---------------------------------------------------------------------------
+: 
+: 
+: void __fastcall TForm1::CallHTMLScript(IHTMLDocument2* f_pDoc, AnsiString f_sFName, DISPPARAMS f_sFParams)
+: {
+: 	if (f_pDoc==NULL)
+: 		return;
+: 
+: 	IDispatch *pDisp=NULL;
+: 	f_pDoc->get_Script(&pDisp);
+: 
+: 
+: 	OLECHAR FAR* szFunctionName = WideString(f_sFName);
+: 
+: 	DISPID dispid;
+: 	pDisp->GetIDsOfNames(IID_NULL, &szFunctionName, 1, LOCALE_SYSTEM_DEFAULT, &dispid);
+: 	pDisp->Invoke(dispid, IID_NULL, LOCALE_SYSTEM_DEFAULT, DISPATCH_METHOD, &f_sFParams, NULL, NULL, NULL);
+:     pDisp->Release();
+: }
+: //---------------------------------------------------------------------------
+: 
+: void __fastcall TForm1::doMakeFile(AnsiString f_sTableText)
+: {
+:     // TestLog("\r\n\r\n\r\nTable Text[] sTableText:[\n\r"+sTableText+"\n\r]");
+:     // doCapture();
+:     AnsiString sFileName = "Result.txt";
+:     AnsiString buf = f_sTableText;
+:     if (buf==NULL)  return;
+: 
+:     try
+:     {
+:         FILE *logfp = NULL;
+:         logfp = fopen(sFileName.c_str(),"a");
+:         if( logfp != NULL ) {
+:             fwrite(buf.c_str(), buf.Length(), 1, logfp);
+:             fclose(logfp); logfp = NULL;
+:         }
+:         else    {
+:         }
+:     }
+:     __finally   {}
+: }
+: //---------------------------------------------------------------------------
+: 
+: void __fastcall TForm1::WebBrowserProgressChange(TObject *Sender,
+:       long Progress, long ProgressMax)
+: {
+:     ProgressBar1->Max=ProgressMax;
+:     ProgressBar1->Position=Progress;
+: }
+: //---------------------------------------------------------------------------
+: 
+: 
+: void __fastcall TForm1::Button3Click(TObject *Sender)
+: {
+:     Close();
+: }
+: //---------------------------------------------------------------------------
+: 
+: void __fastcall TForm1::setHTMLInput(IHTMLElementCollection* f_pElementCol, AnsiString f_sType_Src, AnsiString f_sValue)
+: {
+:     // mmObjInfoLog->Lines->Add("setHTMLInput f_sType_Src:["+f_sType_Src+"] f_sValue:["+f_sValue+"]");
+: 
+:     IHTMLElementCollection *pElementCol1=f_pElementCol;
+: 
+:     HRESULT hr=NULL;
+:     long lElementCol1Cnt=0;
+:     pElementCol1->get_length(&lElementCol1Cnt);
+: 
+:     for (int i=0; i<lElementCol1Cnt; i++) {
+:         VARIANT vIdx;
+:         vIdx.vt = VT_I4;
+:         vIdx.lVal = i;
+: 
+:         IDispatch *pElemDis=NULL;
+:         hr=pElementCol1->item(vIdx, vIdx, &pElemDis);
+: 
+:         if (SUCCEEDED(hr)) {
+:             IHTMLElement *pElem=NULL;
+:             hr=pElemDis->QueryInterface(IID_IHTMLElement, (void**)&pElem);
+: 
+:             if (SUCCEEDED(hr)) {
+:                 BSTR bstrTagName;
+:                 AnsiString sTempTagName;
+: 
+:                 if (SUCCEEDED(pElem->get_tagName(&bstrTagName))) {
+:                     sTempTagName=bstrTagName;
+:                     sTempTagName=sTempTagName.LowerCase();
+:                     SysFreeString (bstrTagName);
+: 
+:                     if (sTempTagName==_T("input")) {
+:                         IHTMLInputElement *pInputElem=NULL;
+:                         hr=pElemDis->QueryInterface(IID_IHTMLInputElement, (void**)&pInputElem);
+: 
+:                         if (SUCCEEDED(hr)) {
+:                             BSTR bstrType, bstrName, bstrSrc;
+:                             AnsiString sTempType, sTempName, sTempSrc;
+:                             if (!FAILED(pInputElem->get_type(&bstrType))) {
+:                                 sTempType = bstrType;
+:                                 SysFreeString(bstrType);
+:                             }
+:                             if (!FAILED(pInputElem->get_name(&bstrName)))   {
+:                                 sTempName = bstrName;
+:                                 SysFreeString (bstrName);
+:                             }
+:                             if (!FAILED(pInputElem->get_src(&bstrSrc)))   {
+:                                 sTempSrc = bstrSrc;
+:                                 SysFreeString (bstrSrc);
+:                             }
+: 
+: 
+: 
+: 
+:                                 WideString wsValue;
+:                                 pInputElem->get_value(&wsValue);
+:                                 AnsiString aaa=wsValue;
+: 
+: 
+: 
+:                                 // mmURL->Lines->Add("=========> sTempTagName:["+sTempName+"] ["+aaa+"]");
+:                                 //IHTMLElement *lpParentElm;
+:                                 //pElem->get_parentElement(&lpParentElm);
+:                                 // lpParentElm->put_innerHTML(L"<img src='http://wstatic.naver.com/w9/lg_naver_v3.gif'>");
+:                                 //lpParentElm->put_innerHTML(L"<input type='text' name='qry'/>");
+:                                 //lpParentElm->Release();
+:                             if (LowerCase(sTempName)==LowerCase(f_sType_Src)||
+:                                 LowerCase(sTempSrc)==LowerCase(f_sType_Src)) {
+: 
+: //                                WideString wsValueT=f_sValue;
+:                                 BSTR bstrNewValue =WideString(f_sValue);
+: 
+:                                 //doCallScriptClick("clearText");
+:                                 pInputElem->put_value(bstrNewValue);
+:                                 // pInputElem->put_value(L"test");
+: 
+: 
+:                                 /*
+:                                 WideString wsValue;
+:                                 pInputElem->get_value(&wsValue);
+:                                 AnsiString aaa=wsValue;
+:                                 */
+:                                 SysFreeString(bstrNewValue);
+: 
+:                                 pInputElem->Release();
+:                                 pElem->Release();
+:                                 pElemDis->Release();
+: 
+:                                 break;
+:                             }
+:                         }
+:                         pInputElem->Release();
+:                     }
+:                 }
+:             pElem->Release();
+:             }
+:             pElemDis->Release();
+:         }
+:     }
+: }
+: //---------------------------------------------------------------------------
+: 
+: void __fastcall TForm1::doCapture()
+: {
+: 	AnsiString sPath=Application->ExeName;
+: 	sPath = sPath.SubString(1, sPath.LastDelimiter("\\"));
+:     AnsiString sDirName="";
+: 
+:     if (Edit3->Text.Trim().Length()==0)
+:     	sDirName="Temp";
+:     else
+:     	sDirName=Edit3->Text+"";
+: 
+:     sPath=sPath+sDirName+"\\";
+: 
+:     if (!DirectoryExists(sPath)) {
+:         CreateDir(sPath);
+:     }
+: 
+: 	HDC hdHandle   	= GetWindowDC(WebBrowser->Handle);
+: 	TImage *CAPTURE = new TImage(NULL);
+: 	CAPTURE->Width  = WebBrowser->Width ;
+: 	CAPTURE->Height = WebBrowser->Height ;
+: 	CAPTURE->Picture->Bitmap = NULL;
+: 
+: 	BitBlt(CAPTURE->Canvas->Handle,
+: 			0, 0,
+: 			WebBrowser->Width, WebBrowser->Height,
+: 			hdHandle,
+: 			0, 0, SRCCOPY);
+: 
+:     SYSTEMTIME nDateTime;
+:     GetSystemTime(&nDateTime);
+:     AnsiString sNewSeq=
+:         FormatFloat("0000",	nDateTime.wYear)+
+:         FormatFloat("00", 	nDateTime.wMonth)+
+:         FormatFloat("00", 	nDateTime.wDay)+
+:         FormatFloat("00", 	nDateTime.wHour)+
+:         FormatFloat("00", 	nDateTime.wMinute)+
+:         FormatFloat("00", 	nDateTime.wSecond);
+: 
+: 
+:     TJPEGImage *Hjpeg = new TJPEGImage();
+:     try {
+: 		Hjpeg->Assign(CAPTURE->Picture->Bitmap);
+: 		Hjpeg->SaveToFile(sPath+sNewSeq+".jpg");
+:     }
+:     __finally {
+:         Hjpeg->Free();
+:     }
+: 	CAPTURE->Free();
+: }
+: //---------------------------------------------------------------------------
+: 
+: IHTMLElement* __fastcall TForm1::doHTMLImgClick(IHTMLElementCollection* f_pElementCol, AnsiString f_sType_Src)
+: {
+:     // mmObjInfoLog->Lines->Add("doHTMLInputClick f_sType_Src:["+f_sType_Src+"]");
+: 
+:     IHTMLElementCollection *pElementCol1=f_pElementCol;
+: 
+:     HRESULT hr=NULL;
+:     long lElementCol1Cnt=0;
+:     pElementCol1->get_length(&lElementCol1Cnt);
+: 
+:     IHTMLImgElement *pImgElemClick=NULL;
+:     IHTMLAnchorElement *pAncElemClick=NULL;
+:     bool bChk=false;
+: 
+:     for (int i=0; i<lElementCol1Cnt; i++) {
+: 
+:         VARIANT vIdx;
+:         vIdx.vt = VT_I4;
+:         vIdx.lVal = i;
+: 
+:         IDispatch *pElemDis=NULL;
+:         hr=pElementCol1->item(vIdx, vIdx, &pElemDis);
+:         if (SUCCEEDED(hr)) {
+: 
+:             IHTMLElement *pElem=NULL;
+:             hr=pElemDis->QueryInterface(IID_IHTMLElement, (void**)&pElem);
+: 
+:             if (SUCCEEDED(hr)) {
+:                 BSTR bstrTagName;
+:                 AnsiString sTempTagName;
+: 
+:                 if (SUCCEEDED(pElem->get_tagName(&bstrTagName))) {
+:                     sTempTagName=bstrTagName;
+:                     sTempTagName=sTempTagName.LowerCase();
+:                     SysFreeString (bstrTagName);
+: 
+:                     //mmURL->Lines->Add("sTempTagName:["+sTempTagName+"]");
+:                     if (sTempTagName==_T("img")) {
+:                         IHTMLImgElement *pImgElem=NULL;
+:                         hr=pElemDis->QueryInterface(IID_IHTMLImgElement, (void**)&pImgElem);
+: 
+:                         if (SUCCEEDED(hr)) {
+:                             BSTR bstrHref, bstrName, bstrSrc;
+:                             AnsiString sTempHref, sTempName, sTempSrc;
+: 
+:                             if (!FAILED(pImgElem->get_href(&bstrHref))) {
+:                                 sTempHref = bstrHref;
+:                                 SysFreeString(bstrHref);
+:                             }
+: 
+:                             // mmURL->Lines->Add("sTempHref:["+sTempHref+"]");
+:                             if (LowerCase(sTempHref)==LowerCase(f_sType_Src)) {
+:                             	//mmObjInfoLog->Lines->Add("Img OnClick:["+sTempHref+"]");
+:                                 bChk=true;
+:                                 pImgElemClick=pImgElem;
+: 
+:                                 pElem->Release();
+:                                 pElemDis->Release();
+: 
+:                                 break;
+:                             }
+:                         }
+:                         pImgElem->Release();
+:                     }
+:                     else if (sTempTagName==_T("a")) {
+:                         IHTMLAnchorElement *pTagElem=NULL;
+:                         hr=pElemDis->QueryInterface(IID_IHTMLAnchorElement, (void**)&pTagElem);
+:                         if (SUCCEEDED(hr)) {
+:                             BSTR bstrHref, bstrName, bstrSrc;
+:                             AnsiString sTempHref, sTempName, sTempSrc;
+: 
+:                             if (!FAILED(pTagElem->get_href(&bstrName))) {
+:                                 sTempName = bstrName;
+:                                 SysFreeString(bstrName);
+:                             }
+: 
+:                             // mmURL->Lines->Add("sTempName:["+sTempName+"] sType_Src:["+f_sType_Src+"]");
+: 
+:                             if (LowerCase(sTempName)==LowerCase(f_sType_Src)) {
+:                             	//mmObjInfoLog->Lines->Add("Img OnClick:["+sTempName+"]");
+:                                 bChk=true;
+:                                 pAncElemClick=pTagElem;
+: 
+:                                 pElem->Release();
+:                                 pElemDis->Release();
+: 
+:                                 break;
+:                             }
+:                         }
+:                         pTagElem->Release();
+:                     }
+:                 }
+:                 pElem->Release();
+:             }
+:             pElemDis->Release();
+:         }
+:     }
+: 
+:     IHTMLElement *pTmpElement=NULL;
+: 
+:     if (bChk) {
+:         if (pImgElemClick!=NULL) {
+:             hr=pImgElemClick->QueryInterface(IID_IHTMLElement, (LPVOID*)&pTmpElement);
+:             /*
+:             pTmpElement->click();
+:             pTmpElement->Release();
+:             */
+:             pImgElemClick->Release();
+: 
+:         }
+: 
+:         if (pAncElemClick!=NULL) {
+:             hr=pAncElemClick->QueryInterface(IID_IHTMLElement, (LPVOID*)&pTmpElement);
+:             /*
+:             pTmpElement->click();
+:             pTmpElement->Release();
+:             */
+:             pAncElemClick->Release();
+: 
+:         }
+:     }
+:     return pTmpElement;
+: }
+: //---------------------------------------------------------------------------
+: 
+: 
+: 
+: void __fastcall TForm1::btnKeywordInputClick(TObject *Sender)
+: {
+: 	if (m_pHTMLDocument1==NULL)
+: 		return;
+: 
+:         HRESULT hr;
+:         IHTMLElementCollection* pElementCol1=NULL;
+:         hr=m_pHTMLDocument1->get_all(&pElementCol1);
+:         if (FAILED(hr)) return;
+: 
+:         long lElementCol1Cnt=0;
+:         pElementCol1->get_length (&lElementCol1Cnt);
+: 
+:         for (int i=0; i<lElementCol1Cnt; i++) {
+:             VARIANT vIdx;
+:             vIdx.vt = VT_I4;
+:             vIdx.lVal = i;
+: 
+:             IDispatch *pElemDis=NULL;
+:             hr=pElementCol1->item(vIdx, vIdx, &pElemDis);
+:             if (FAILED(hr)) continue;
+: 
+:             IHTMLElement *pElem=NULL;
+:             hr=pElemDis->QueryInterface(IID_IHTMLElement, (void**)&pElem);
+:             if (FAILED(hr)) continue;
+: 
+:             WideString HTML;
+:             WideString Text;
+: 
+:             BSTR bstrTagName;
+:             AnsiString sTempTagName;
+:             if (!FAILED(pElem->get_tagName(&bstrTagName))) {
+:                 sTempTagName=bstrTagName;
+:                 sTempTagName=sTempTagName.LowerCase();
+:                 SysFreeString (bstrTagName);
+:             }
+: 
+:             if (sTempTagName==_T("input")) {
+:                 IHTMLInputElement *pInputElem=NULL;
+:                 hr=pElemDis->QueryInterface(IID_IHTMLInputElement, (void**)&pInputElem);
+: 
+:                 if (SUCCEEDED(hr)) {
+:                     BSTR bstrType, bstrName, bstrValue;
+:                     AnsiString sTempType, sTempName, sTempValue;
+:                     if (!FAILED(pInputElem->get_type(&bstrType))) {
+:                         sTempType = bstrType;
+:                         SysFreeString(bstrType);
+:                     }
+:                     if (!FAILED(pInputElem->get_name(&bstrName)))   {
+:                         sTempName = bstrName;
+:                         SysFreeString (bstrName);
+:                     }
+:                     if (!FAILED(pInputElem->get_value(&bstrValue))) {
+:                         sTempValue = bstrValue;
+:                         SysFreeString (bstrValue);
+:                     }
+: 
+:                     if (sTempName=="qry") {
+:                         BSTR bstrNewValue =WideString(Edit3->Text);
+:                         pInputElem->put_value(bstrNewValue);
+:                         SysFreeString(bstrNewValue);
+:                     }
+:                 }
+:                 pInputElem->Release();
+:             }
+:             pElem->Release();
+:             pElemDis->Release();
+:         }
+:         pElementCol1->Release();
+: }
+: //---------------------------------------------------------------------------
+: 
+: void __fastcall TForm1::btnSrhSubmitClick(TObject *Sender)
+: {
+:     nStep=SRH_RESULT;
+:     btnKeywordInputClick(NULL);
+: 
+:     HRESULT hr;
+:     IHTMLElementCollection* pElementCol1=NULL;
+:     hr=m_pHTMLDocument1->get_all(&pElementCol1);
+:     if (FAILED(hr)) return;
+: 
+:     if (m_pHTMLElement!=NULL) {
+:         m_pHTMLElement->Release();
+:     }
+:     m_pHTMLElement=doHTMLImgClick(pElementCol1, "javascript:qrychk();");
+: 
+:     if (m_pHTMLElement!=NULL) {
+:         m_pHTMLElement->click();
+:     }
+: 
+:     pElementCol1->Release();
+: }
+: //---------------------------------------------------------------------------
+: 
+: void __fastcall TForm1::Timer1Timer(TObject *Sender)
+: {
+:     if (nStep==LOGIN) {
+:         btnSrhSubmitClick(NULL);
+:         mmURL->Lines->Add("Timer1Timer:[LOGIN] [btnSrhSubmitClick]");
+:     }
+:     else if (nStep==SRH_RESULT || nStep==SRH_NEXTPAGE) {
+:         btnResultSaveClick(NULL);
+:         mmURL->Lines->Add("Timer1Timer:[SRH_RESULT] [btnResultSaveClick]");
+:     }
+:     Timer1->Enabled=false;
+: }
+: //---------------------------------------------------------------------------
+: 
+: void __fastcall TForm1::btnLoginClick(TObject *Sender)
+: {
+: 	if (m_pHTMLDocument1==NULL)
+: 		return;
+: 
+:     nStep=LOGIN;
+: 
+:     HRESULT hr;
+:     IHTMLElementCollection* pElementCol1=NULL;
+:     hr=m_pHTMLDocument1->get_all(&pElementCol1);
+:     if (FAILED(hr)) return;
+: 
+:     long lElementCol1Cnt=0;
+:     pElementCol1->get_length (&lElementCol1Cnt);
+: 
+:     for (int i=0; i<lElementCol1Cnt; i++) {
+:         VARIANT vIdx;
+:         vIdx.vt = VT_I4;
+:         vIdx.lVal = i;
+: 
+:         IDispatch *pElemDis=NULL;
+:         hr=pElementCol1->item(vIdx, vIdx, &pElemDis);
+:         if (FAILED(hr)) continue;
+: 
+:         IHTMLElement *pElem=NULL;
+:         hr=pElemDis->QueryInterface(IID_IHTMLElement, (void**)&pElem);
+:         if (FAILED(hr)) continue;
+: 
+:         WideString HTML;
+:         WideString Text;
+: 
+:         BSTR bstrTagName;
+:         AnsiString sTempTagName;
+:         if (!FAILED(pElem->get_tagName(&bstrTagName))) {
+:             sTempTagName=bstrTagName;
+:             sTempTagName=sTempTagName.LowerCase();
+:             SysFreeString (bstrTagName);
+:         }
+: 
+:         if (sTempTagName==_T("input")) {
+:             IHTMLInputElement *pInputElem=NULL;
+:             hr=pElemDis->QueryInterface(IID_IHTMLInputElement, (void**)&pInputElem);
+: 
+:             if (SUCCEEDED(hr)) {
+:                 BSTR bstrType, bstrName, bstrValue;
+:                 AnsiString sTempType, sTempName, sTempValue;
+:                 if (!FAILED(pInputElem->get_type(&bstrType))) {
+:                     sTempType = bstrType;
+:                     SysFreeString(bstrType);
+:                 }
+:                 if (!FAILED(pInputElem->get_name(&bstrName)))   {
+:                     sTempName = bstrName;
+:                     SysFreeString (bstrName);
+:                 }
+:                 if (!FAILED(pInputElem->get_value(&bstrValue))) {
+:                     sTempValue = bstrValue;
+:                     SysFreeString (bstrValue);
+:                 }
+: 
+:                 if (sTempName=="userid") {
+:                     BSTR bstrNewValue =WideString(g_sId);
+:                     pInputElem->put_value(bstrNewValue);
+:                     SysFreeString(bstrNewValue);
+:                 }
+:                 if (sTempName=="passwd") {
+:                     BSTR bstrNewValue =WideString(g_sPw);
+:                     pInputElem->put_value(bstrNewValue);
+:                     SysFreeString(bstrNewValue);
+:                 }
+:             }
+:             pInputElem->Release();
+:         }
+:         pElem->Release();
+:         pElemDis->Release();
+:     }
+:     pElementCol1->Release();
+: 
+:     btnCallScriptClick(NULL);
+: }
+: //---------------------------------------------------------------------------
+: 
+: void __fastcall TForm1::btnMainClick(TObject *Sender)
+: {
+:     nStep=MAIN;
+:     AnsiString sURL="http://www.wedisk.co.kr/";
+:     goWebPage(sURL);
+: }
+: //---------------------------------------------------------------------------
+: 
+: void __fastcall TForm1::btnResultSaveClick(TObject *Sender)
+: {
+: 	if (m_pHTMLDocument1==NULL)
+: 		return;
+: 
+:     nStep=SRH_RESULT_SAVE;
+: 
+:     HRESULT hr;
+:     IHTMLElementCollection* pElementCol1=NULL;
+:     hr=m_pHTMLDocument1->get_all(&pElementCol1);
+:     if (FAILED(hr)) return;
+: 
+:     long lElementCol1Cnt=0;
+:     pElementCol1->get_length (&lElementCol1Cnt);
+: 
+:     long lECLen = 0;
+:     pElementCol1->get_length(&lECLen);
+:     if (FAILED(hr)) return;
+: 
+:     long length;
+:     IDispatch *pDisOne=NULL;
+:     IHTMLElementCollection *pSubCollection=NULL;
+:     VARIANT bstrTable;
+: 
+:     // Select????
+:     bstrTable.vt = VT_BSTR;
+:     bstrTable.bstrVal = L"SELECT";
+:     pElementCol1->tags(bstrTable, &pDisOne);
+: 
+:     pSubCollection=(IHTMLElementCollection *)pDisOne;
+:     pSubCollection->get_length(&length);
+:     mmURL->Lines->Add("Select Count:["+FloatToStr(length)+"]");
+:     for(int i=0; i<length; i++) {
+:         IDispatch *pDisTwo=NULL;
+: 
+:         VARIANT name;
+:         name.vt = VT_I4;
+:         name.lVal = i;
+: 
+:         VARIANT index;
+:         index.vt = VT_I4;
+:         index.lVal = i;
+: 
+:         hr=pSubCollection->item(name, index, (IDispatch**)&pDisTwo);
+:         if (FAILED(hr)) return;
+: 
+: 
+:         IHTMLSelectElement* pSelectElem=NULL;
+:         hr=pDisTwo->QueryInterface(IID_IHTMLSelectElement, (void**)&pSelectElem);
+:         if (FAILED(hr)) return;
+: 
+:         BSTR bstrName;
+:         AnsiString sName;
+:         hr=pSelectElem->get_name(&bstrName);
+:         if (FAILED(hr)) return;
+:         sName=bstrName;
+: 
+:         if (sName==_T("rc")) {
+:             pSelectElem->put_value(WideString("20"));
+:             pSelectElem->Release();
+:             break;
+:         }
+:         pSelectElem->Release();
+:         // mmURL->Lines->Add("lRowCnt:["+FloatToStr(lRowCnt)+"]");
+:     }
+: 
+:     // Table????
+:     bstrTable.vt = VT_BSTR;
+:     bstrTable.bstrVal = L"TABLE";
+:     pElementCol1->tags(bstrTable, &pDisOne);
+: 
+:     if (pSubCollection!=NULL) {
+:         pSubCollection->Release();
+:     }
+: 
+:     pSubCollection=(IHTMLElementCollection *)pDisOne;
+:     pSubCollection->get_length(&length);
+:     mmURL->Lines->Add("Table Count:["+FloatToStr(length)+"]");
+: 
+:     for(int i=0; i<length; i++) {
+:         IDispatch *pDisTwo=NULL;
+: 
+:         VARIANT name;
+:         name.vt = VT_I4;
+:         name.lVal = i;
+: 
+:         VARIANT index;
+:         index.vt = VT_I4;
+:         index.lVal = i;
+: 
+:         hr=pSubCollection->item(name, index, (IDispatch**)&pDisTwo);
+:         if (FAILED(hr)) return;
+: 
+:         IHTMLTable *pTable;
+:         hr=pDisTwo->QueryInterface(IID_IHTMLTable, (LPVOID*)&pTable);
+:         if (FAILED(hr)) return;
+: 
+:         IHTMLElementCollection *spRowCol=NULL;
+:         pTable->get_rows(&spRowCol);
+: 
+:         long lRowCnt=0;
+:         spRowCol->get_length(&lRowCnt);
+: 
+:         bool bRow=false;
+:         for(int j=0; j<lRowCnt; j++) {
+:             IDispatch *pDisTableRow=NULL;
+:             VARIANT TRowName;
+:             TRowName.vt = VT_I4;
+:             TRowName.lVal = j;
+: 
+:             VARIANT TRowIndex;
+:             TRowIndex.vt = VT_I4;
+:             TRowIndex.lVal = j;
+: 
+:             spRowCol->item(TRowName, TRowIndex, (IDispatch**)&pDisTableRow);
+: 
+:             IHTMLTableRow *spTableRow=NULL;
+:             hr=pDisTableRow->QueryInterface(IID_IHTMLTableRow, (LPVOID*)&spTableRow);
+:             if (FAILED(hr)) return;
+: 
+:             IHTMLElementCollection *spCellCol=NULL;
+:             spTableRow->get_cells(&spCellCol);
+:             long lCellCnt=0;
+:             spCellCol->get_length(&lCellCnt);
+: 
+:             // mmURL->Lines->Add("lCellCnt:["+FloatToStr(lCellCnt)+"]");
+:             AnsiString sCell="";
+:             for(int t=0; t<lCellCnt; t++) {
+:                 IDispatch *pDisTableCell=NULL;
+:                 VARIANT TCellName;
+:                 TCellName.vt = VT_I4;
+:                 TCellName.lVal = t;
+: 
+:                 VARIANT TCellIndex;
+:                 TCellIndex.vt = VT_I4;
+:                 TCellIndex.lVal = t;
+: 
+:                 spCellCol->item(TCellName, TCellIndex, (IDispatch**)&pDisTableCell);
+: 
+:                 IHTMLTableCell *spTableCell=NULL;
+:                 hr=pDisTableCell->QueryInterface(IID_IHTMLTableCell, (LPVOID*)&spTableCell);
+:                 if (FAILED(hr)) return;
+: 
+:                 IHTMLElement *HTMLElement=NULL;
+:                 hr=spTableCell->QueryInterface(IID_IHTMLElement, (LPVOID*)&HTMLElement);
+:                 if (FAILED(hr)) return;
+: 
+:                 WideString HTML="";
+:                 HTMLElement->get_innerHTML(&HTML);
+:                 AnsiString sTmpHTML=UpperCase(HTML);
+: 
+:                 sTmpHTML=doDeleteTag(sTmpHTML, "FONT");
+:                 sTmpHTML=doDeleteTag(sTmpHTML, "B");
+:                 sTmpHTML=doDeleteTag(sTmpHTML, "DIV");
+:                 sTmpHTML=doDeleteTag(sTmpHTML, "STRONG");
+:                 sTmpHTML=doDeleteTag(sTmpHTML, "A");
+:                 sTmpHTML=doDeleteTag(sTmpHTML, "IMG");
+:                 sTmpHTML=doDeleteTag(sTmpHTML, "SPAN");
+: 
+: //                        TestLog("-----------------------------------------sTmpHTML:"+sTmpHTML);
+:                 if (sTmpHTML.Trim().SubString(1, 1)!="<"&&sTmpHTML.Pos("<TABLE")==0&&
+:                     sTmpHTML.Pos("<TBODY")==0&&sTmpHTML.Pos("<OBJECT")==0&&sTmpHTML.Pos("<SELECT")==0&&
+:                     sTmpHTML.Trim()!="") {
+:                     //TestLog("-----------------------------------------sTmpHTML:"+sTmpHTML);
+: 
+:                     sTmpHTML=sTmpHTML.Trim();
+:                     sTmpHTML=StringReplace(sTmpHTML, "&NBSP;", " ", TReplaceFlags()<<rfReplaceAll);
+:                     sTmpHTML=StringReplace(sTmpHTML, ",", "", TReplaceFlags()<<rfReplaceAll);
+:                     sCell+=sTmpHTML+",";
+:                 }
+: 
+:                 spTableCell->Release();
+:                 pDisTableCell->Release();
+:                 HTMLElement->Release();
+:             }
+: 
+:             bool bChk=true;
+: 
+:             try {
+:                 if (sCell.Trim()!="") {
+:                     StrToInt(getCommaParse(sCell, 0));
+:                 }
+:             }
+:             catch (...) {
+:                 bChk=false;
+:             }
+: 
+:             bool bChk1=true;
+:             try {
+:                 if (sCell.Trim()!="") {
+:                     StrToInt(getCommaParse(sCell, 1));
+:                     bChk1=false;
+:                 }
+: 
+:             }
+:             catch (...) {
+:                 bChk1=true;
+:             }
+: 
+:             if (bChk&&bChk1&&sCell.Trim()!="")  {
+:                 TestLog("-----------------------------------------sCell:"+sCell+"\n");
+:                 sCell=sCell+"\n";
+:                 doMakeFile(sCell);
+:                 bRow=true;
+:             }
+: 
+:             spCellCol->Release();
+:             spTableRow->Release();
+:             pDisTableRow->Release();
+: 
+:         }
+:         pTable->Release();
+:         pDisTwo->Release();
+:         if (bRow) {
+:             // WebBrowser->ScrollBy(0, -100);
+:             mmURL->Lines->Add("-------------------------------------------------");
+:             doCapture(); 
+:         }
+:     }
+: 
+:     if (pSubCollection!=NULL) {
+:         pSubCollection->Release();
+:     }
+: 
+:     btnNextPageClick(NULL);
+: }
+: //---------------------------------------------------------------------------
+: 
+: 
+: void __fastcall TForm1::btnAncSrhClick(TObject *Sender)
+: {
+:     HRESULT hr;
+:     IHTMLElementCollection* pElementCol1=NULL;
+:     hr=m_pHTMLDocument1->get_all(&pElementCol1);
+:     if (FAILED(hr)) return;
+: 
+:     if (m_pHTMLElement!=NULL) {
+:         m_pHTMLElement->Release();
+:     }
+:     m_pHTMLElement=doHTMLImgClick(pElementCol1, "javascript:qrychk();");
+: 
+:     pElementCol1->Release();
+: }
+: //---------------------------------------------------------------------------
+: 
+: void __fastcall TForm1::btnNextPageClick(TObject *Sender)
+: {
+: 	if (m_pHTMLDocument1==NULL)
+: 		return;
+: 
+:     nStep=SRH_NEXTPAGE;
+: 
+:     HRESULT hr;
+:     IHTMLElementCollection* pElementCol1=NULL;
+:     hr=m_pHTMLDocument1->get_all(&pElementCol1);
+:     if (FAILED(hr)) return;
+: 
+:     long lElementCol1Cnt=0;
+:     pElementCol1->get_length (&lElementCol1Cnt);
+: 
+:     long lECLen = 0;
+:     pElementCol1->get_length(&lECLen);
+:     if (FAILED(hr)) return;
+: 
+:     long length;
+:     IDispatch *pDisOne=NULL;
+:     IHTMLElementCollection *pSubCollection=NULL;
+:     VARIANT bstrTable;
+: 
+:     // Table????
+:     bstrTable.vt = VT_BSTR;
+:     bstrTable.bstrVal = L"TABLE";
+:     pElementCol1->tags(bstrTable, &pDisOne);
+: 
+:     pSubCollection=(IHTMLElementCollection *)pDisOne;
+:     pSubCollection->get_length(&length);
+:     mmURL->Lines->Add("Table Count:["+FloatToStr(length)+"]");
+: 
+:     for(int i=0; i<length; i++) {
+:         IDispatch *pDisTwo=NULL;
+: 
+:         VARIANT name;
+:         name.vt = VT_I4;
+:         name.lVal = i;
+: 
+:         VARIANT index;
+:         index.vt = VT_I4;
+:         index.lVal = i;
+: 
+:         hr=pSubCollection->item(name, index, (IDispatch**)&pDisTwo);
+:         if (FAILED(hr)) return;
+: 
+:         IHTMLTable *pTable;
+:         hr=pDisTwo->QueryInterface(IID_IHTMLTable, (LPVOID*)&pTable);
+:         if (FAILED(hr)) return;
+: 
+:         IHTMLElementCollection *spRowCol=NULL;
+:         pTable->get_rows(&spRowCol);
+: 
+:         long lRowCnt=0;
+:         spRowCol->get_length(&lRowCnt);
+:        // mmURL->Lines->Add("lRowCnt:["+FloatToStr(lRowCnt)+"]");
+: 
+:         bool bNextPage=false;
+:         bool bRow=false;
+:         for(int j=0; j<lRowCnt; j++) {
+:             IDispatch *pDisTableRow=NULL;
+:             VARIANT TRowName;
+:             TRowName.vt = VT_I4;
+:             TRowName.lVal = j;
+: 
+:             VARIANT TRowIndex;
+:             TRowIndex.vt = VT_I4;
+:             TRowIndex.lVal = j;
+: 
+:             spRowCol->item(TRowName, TRowIndex, (IDispatch**)&pDisTableRow);
+: 
+:             IHTMLTableRow *spTableRow=NULL;
+:             hr=pDisTableRow->QueryInterface(IID_IHTMLTableRow, (LPVOID*)&spTableRow);
+:             if (FAILED(hr)) return;
+: 
+:             IHTMLElementCollection *spCellCol=NULL;
+:             spTableRow->get_cells(&spCellCol);
+:             long lCellCnt=0;
+:             spCellCol->get_length(&lCellCnt);
+: 
+:             // mmURL->Lines->Add("lCellCnt:["+FloatToStr(lCellCnt)+"]");
+:             AnsiString sCell="";
+:             for(int t=0; t<lCellCnt; t++) {
+:                 IDispatch *pDisTableCell=NULL;
+:                 VARIANT TCellName;
+:                 TCellName.vt = VT_I4;
+:                 TCellName.lVal = t;
+: 
+:                 VARIANT TCellIndex;
+:                 TCellIndex.vt = VT_I4;
+:                 TCellIndex.lVal = t;
+: 
+:                 spCellCol->item(TCellName, TCellIndex, (IDispatch**)&pDisTableCell);
+: 
+:                 IHTMLTableCell *spTableCell=NULL;
+:                 hr=pDisTableCell->QueryInterface(IID_IHTMLTableCell, (LPVOID*)&spTableCell);
+:                 if (FAILED(hr)) return;
+: 
+:                 IHTMLElement *HTMLElement=NULL;
+:                 hr=spTableCell->QueryInterface(IID_IHTMLElement, (LPVOID*)&HTMLElement);
+:                 if (FAILED(hr)) return;
+: 
+:                 WideString HTML="";
+:                 HTMLElement->get_innerHTML(&HTML);
+:                 AnsiString sTmpHTML=UpperCase(HTML);
+: 
+:                 WideString wsTitle;
+:                 HTMLElement->get_title(&wsTitle);
+: 
+: //                mmURL->Lines->Add("TmpHTML:["+sTmpHTML+"]");
+: //                mmURL->Lines->Add("wsTitle:["+wsTitle+"]");
+: 
+:                 spTableCell->Release();
+:                 pDisTableCell->Release();
+: 
+:                 if (sTmpHTML=="??") {
+:                     m_pHTMLElement=HTMLElement;
+:                     bNextPage=true;
+:                       /*
+:                     VARIANT TClick;
+:                     TCellIndex.vt = VT_I4;
+:                     TCellIndex.lVal = t;
+: 
+:                     HTMLElement->get_onclick(&TClick);
+:                     m_pHTMLElement->put_onclick(TClick);
+:                     */
+:                 //    HTMLElement->get_innerHTML();
+:                   //  mmURL->Lines->Add("TmpHTML:["+sTmpHTML+"]");
+:                     break;
+: 
+:                 }
+:                 HTMLElement->Release();
+:             }
+: 
+:             spCellCol->Release();
+:             spTableRow->Release();
+:             pDisTableRow->Release();
+: 
+:             if (bNextPage) {
+:                 break;
+:             }
+:         }
+:         pTable->Release();
+:         pDisTwo->Release();
+: 
+:         if (bNextPage) {
+:             break;
+:         }
+:     }
+: 
+:     if (pSubCollection!=NULL) {
+:         pSubCollection->Release();
+:     }
+: 
+:     if (m_pHTMLElement!=NULL) {
+:         m_pHTMLElement->click();
+:     }
+: }
+: //---------------------------------------------------------------------------
+: 
+: 
+: void __fastcall TForm1::Button8Click(TObject *Sender)
+: {
+:     nStep=STOP;
+: }
+: //---------------------------------------------------------------------------

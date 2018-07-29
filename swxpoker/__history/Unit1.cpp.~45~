@@ -1,0 +1,667 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "Unit1.h"
+#include "Unit2.h"
+#include <vector>
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm1 *Form1;
+TForm2 *Form2;
+String GirisData1 = "<msg t='sys'><body action='login' r='0'><login z='TexasHoldemUp'><nick><![CDATA[%7B%22user%22%3A%221%3A100000358995214%22%2C%22protoVersion%22%3A10%2C%22pic_lrg_url%22%3A%22http%3A//profile.ak.fbcdn.net/hprofile-ak-snc6/187444_100000358995214_773021306_n.jpg%22%2C%22phpToSfxVars%22%3A%7B%22newPowerTourneyVariant%22%3A2%2C%22badLossEnabled%22%3A1%2C%22userPowerTourneyType%22%3A%22repricedBuyinTable%22%2C%22mgfwP1Reward%22%3A1%2C%22skipLostCollectibleShout%22%3A1%7D%2C%22rank%22%3A0%2C%22capabilities%22%3A0%2C%22autoJoin%22%3A1%2C%22tourneyState%22%3A%220%22%2C%22clientType%22%3A%22flash%22%2C%22clientId%22%3A1%2C%22newUserInstall%22%3A0%2C%22PGIViewAndDisplay%22%3A1%2C%22hideGifts%22%3A0%2C%22buildVersion%22%3A1%2C%22emailSubscribed%22%3A1%2C%22lobbyList%22%3A1%2C%22pic_url%22%3A%22https%3A//zynga1-a.akamaihd.net/pokerimages/poker/image_proxy.php/EWxhSj8Cvu0T8Ax7MOQ4rFzKYrUu3ANOngNVdtz90yhmMkB.WWUpIGiTIiRYvlZ5hvgO6b573L9fe2pq7rYuRgYXEUDib9yDcvkgMBV91rBX5SU%3D/4106277420%22%2C%22profile_url%22%3A%22http%3A//apps.facebook.com/texas_holdem/playa.php%3Fuid%3D%22%2C%22autoRoom%22%3A1%2C%22PGIBuyAndSend%22%3A1%2C%22sn_id%22%3A1%2C%22locale%22%3A%22tr%22%2C%22UnreachableProtect%22%3A1%7D]]></nick><pword><![CDATA[8281ba5118b556ce2180f3608d256708:1354841391:35FF8185C55CB6514C62147BC854A73E]]></pword></login></body></msg>";
+String GirisData2 = "<msg t='sys'><body action='login' r='0'><login z='TexasHoldemUp'><nick><![CDATA[%7B%22clientType%22%3A%22flash%22%2C%22profile_url%22%3A%22http%3A//apps.facebook.com/texas_holdem/playa.php%3Fuid%3D%22%2C%22pic_lrg_url%22%3A%22http%3A//profile.ak.fbcdn.net/hprofile-ak-snc6/273259_100000333375459_150454955_n.jpg%22%2C%22tourneyState%22%3A%220%22%2C%22newUserInstall%22%3A0%2C%22autoRoom%22%3A1%2C%22rank%22%3A0%2C%22capabilities%22%3A0%2C%22protoVersion%22%3A10%2C%22UnreachableProtect%22%3A1%2C%22autoJoin%22%3A1%2C%22phpToSfxVars%22%3A%7B%22skipLostCollectibleShout%22%3A1%2C%22badLossEnabled%22%3A1%2C%22userPowerTourneyType%22%3A%22repricedBuyinTable%22%2C%22mgfwP1Reward%22%3A1%2C%22newPowerTourneyVariant%22%3A2%7D%2C%22pic_url%22%3A%22https%3A//zynga1-a.akamaihd.net/pokerimages/poker/image_proxy.php/NV9XTXo8wueOGJqZBdKO4GEkRyUHuqIcAof2xXm6Xg6RcQW.UpV7l87dMaYw1jm5FRm8vPQI7x_mOjwqo1R_1xnLq43e86xmKxgkocBlXShEQ9U%3D/1484752108%22%2C%22sn_id%22%3A1%2C%22emailSubscribed%22%3A1%2C%22clientId%22%3A1%2C%22PGIViewAndDisplay%22%3A1%2C%22lobbyList%22%3A1%2C%22hideGifts%22%3A0%2C%22PGIBuyAndSend%22%3A1%2C%22buildVersion%22%3A1%2C%22locale%22%3A%22tr%22%2C%22user%22%3A%221%3A100000333375459%22%7D]]></nick><pword><![CDATA[d4aed537acb4d4439bf25ab344ca4204:1354841414:86F85173077AE1BED69BF60EEF9670EE]]></pword></login></body></msg>";
+String GirisData3 = "<msg t='sys'><body action='login' r='0'><login z='TexasHoldemUp'><nick><![CDATA[%7B%22pic_url%22%3A%22https%3A//zynga1-a.akamaihd.net/pokerimages/poker/image_proxy.php/RkVoTROvjWyNtmQkVAnJu4FjtLGyiBb2cwpz2KYo_FLsVHL.hTf4Yxoz7p6zRBTiwGCkhdLVIfF2Yw.60U9t2sXK9chISSevs7qyscM7gBXKu.s8/261860581%22%2C%22clientType%22%3A%22flash%22%2C%22protoVersion%22%3A10%2C%22profile_url%22%3A%22http%3A//apps.facebook.com/texas_holdem/playa.php%3Fuid%3D%22%2C%22locale%22%3A%22tr%22%2C%22sn_id%22%3A1%2C%22rank%22%3A0%2C%22autoJoin%22%3A1%2C%22clientId%22%3A1%2C%22pic_lrg_url%22%3A%22http%3A//profile.ak.fbcdn.net/hprofile-ak-ash4/372183_100000356565337_1829833377_n.jpg%22%2C%22user%22%3A%221%3A100000356565337%22%2C%22hideGifts%22%3A0%2C%22newUserInstall%22%3A0%2C%22buildVersion%22%3A1%2C%22emailSubscribed%22%3A1%2C%22phpToSfxVars%22%3A%7B%22userPowerTourneyType%22%3A%22repricedBuyinTable%22%2C%22skipLostCollectibleShout%22%3A1%2C%22badLossEnabled%22%3A1%2C%22mgfwP1Reward%22%3A1%2C%22newPowerTourneyVariant%22%3A2%7D%2C%22lobbyList%22%3A1%2C%22UnreachableProtect%22%3A1%2C%22PGIBuyAndSend%22%3A1%2C%22tourneyState%22%3A%220%22%2C%22autoRoom%22%3A1%2C%22PGIViewAndDisplay%22%3A1%2C%22capabilities%22%3A0%7D]]></nick><pword><![CDATA[47f7107a9a11ad5653a3f58884470e61:1354841437:BA8B62151566ACA5B70547ECECBC7E15]]></pword></login></body></msg>";
+String GirisData4 = "<msg t='sys'><body action='login' r='0'><login z='TexasHoldemUp'><nick><![CDATA[%7B%22PGIBuyAndSend%22%3A1%2C%22clientId%22%3A1%2C%22rank%22%3A0%2C%22user%22%3A%221%3A100000354855488%22%2C%22pic_lrg_url%22%3A%22http%3A//profile.ak.fbcdn.net/hprofile-ak-ash4/260692_100000354855488_1506452775_n.jpg%22%2C%22protoVersion%22%3A10%2C%22lobbyList%22%3A1%2C%22autoRoom%22%3A1%2C%22sn_id%22%3A1%2C%22capabilities%22%3A0%2C%22autoJoin%22%3A1%2C%22tourneyState%22%3A%220%22%2C%22clientType%22%3A%22flash%22%2C%22hideGifts%22%3A0%2C%22UnreachableProtect%22%3A1%2C%22emailSubscribed%22%3A1%2C%22buildVersion%22%3A1%2C%22pic_url%22%3A%22https%3A//zynga1-a.akamaihd.net/pokerimages/poker/image_proxy.php/_WlgZeUIPwOfP6YkjfBJwBL5frAtutgOVxSZC7TLJ72nC4S2gmGz0__NIEY28qnv0G8LjDCRHIiEx7r21z8uBJXkdIlhuk1qIyTCavtD_wsAl6DU/2510301426%22%2C%22newUserInstall%22%3A0%2C%22profile_url%22%3A%22http%3A//apps.facebook.com/texas_holdem/playa.php%3Fuid%3D%22%2C%22PGIViewAndDisplay%22%3A1%2C%22locale%22%3A%22tr%22%2C%22phpToSfxVars%22%3A%7B%22skipLostCollectibleShout%22%3A1%2C%22newPowerTourneyVariant%22%3A2%2C%22badLossEnabled%22%3A1%2C%22mgfwP1Reward%22%3A1%2C%22userPowerTourneyType%22%3A%22repricedBuyinTable%22%7D%7D]]></nick><pword><![CDATA[07ffe565c526c839e7be8bb4bf99385e:1354841460:0549EC0B99D9D6E2FE4587030D92C45C]]></pword></login></body></msg>";
+
+String calltutar="45000000",Raisetutar,AllinTutar;
+String MaxBling,PostBling,ToplamPara,MasaPara;
+//---------------------------------------------------------------------------
+__fastcall TForm1::TForm1(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+typedef struct{
+			char OdaIsmi[35];
+			int  OdaNo;
+			int MinPot;
+			int MaxPot;
+			int MaxPara;
+			int MaxOtur;
+			int MinPara;
+			int OdaTip;
+}OdaListe;
+OdaListe OdaListeEkle;
+std::vector<OdaListe> OdaListesi;
+ AnsiString Odalar="";
+ int OdaIndex=0;
+ bool RoomAl=false;
+ AnsiString UID;
+ AnsiString KoltukNo;
+
+AnsiString OdaAyir(AnsiString &gel)
+{
+	AnsiString Parcala="";
+	int d=gel.Pos(",")  ;
+	if(d)
+   {
+		Parcala=AnsiMidStr(gel , d+1 , gel.Length());
+		d=Parcala.Pos(",") ;
+		gel=AnsiMidStr(Parcala , d , Parcala.Length());
+		Parcala=AnsiLeftStr(Parcala,d-1);
+	}
+	return Parcala;
+}
+
+
+void OdaEkle(AnsiString Data)
+{
+	AnsiString Aranan,Parcala;
+	int d;
+	Aranan="<var n='";
+	d=Data.Pos(Aranan);
+	if(!d)
+		return ;
+	Parcala=AnsiMidStr(Data , d+Aranan.Length() , Data.Length());
+	d= Parcala.Pos("'");
+	AnsiString OdaNo=AnsiLeftStr(Parcala,d-1);
+	Aranan="' t='s'>";
+	d= Parcala.Pos(Aranan);
+	Parcala=AnsiMidStr(Parcala , d+Aranan.Length() , Parcala.Length());
+	d=Parcala.Pos(",");
+	AnsiString OdaIsim=AnsiLeftStr(Parcala,d-1);
+	OdaNo=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	AnsiString Oturan=OdaAyir (Parcala);
+	AnsiString MinPot=OdaAyir (Parcala);
+	AnsiString MaxPot=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	AnsiString MaxPara=OdaAyir (Parcala);
+	AnsiString MaxKul=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	AnsiString OdaTip=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	//Aranan=OdaAyir (Parcala);
+	AnsiString MinPara=OdaAyir (Parcala);
+	memset(&OdaListeEkle,0,sizeof(OdaListe));
+	strcpy(OdaListeEkle.OdaIsmi,OdaIsim.c_str());
+	OdaListeEkle.OdaNo=OdaNo.ToIntDef(0);
+	OdaListeEkle.MaxOtur= Oturan.ToIntDef(0);
+	OdaListeEkle.MinPot=MinPot.ToIntDef(0);
+	OdaListeEkle.MaxPot=MaxPot.ToIntDef(0);
+	OdaListeEkle.MaxPara= MaxPara.ToIntDef(0);
+	OdaListeEkle.MinPara= MinPara.ToIntDef(0);
+	if(Form1->CheckBox1->Checked )
+	{
+		Form1->MasaList->Items->Add(Utf8ToAnsi(OdaListeEkle.OdaIsmi)+"%"+OdaNo);
+	}
+	if(OdaTip=="normal")
+	{
+		OdaListeEkle.OdaTip=1;
+	}
+	else
+	{
+		return;
+	}
+	OdaListesi.push_back(OdaListeEkle);
+}
+
+void OdaDuzenle()
+{
+	AnsiString gel=Odalar;
+	//Form1->MasaListNo->Items->Clear();
+	Form1->MasaList->Items->Clear();
+	AnsiString Parcala  ;
+	OdaListesi.clear();
+	AnsiString Aranan="<obj o='rooms' t='a'>";
+	int 	d=gel.Pos(Aranan)  ;
+	if(d)
+	{
+		Parcala=AnsiMidStr(gel , d+Aranan.Length() , gel.Length());
+	}
+	for(;;)
+	{
+		int Pl;
+		d=Parcala.Pos("</var>") ;
+		if(!d)
+		{
+			break;
+		}
+		UID=AnsiLeftStr(Parcala,d+5);
+		Pl=  Parcala.Length();
+		Parcala=AnsiMidStr(Parcala,d+6,Parcala.Length());
+		OdaEkle(UID);
+	 }
+}
+
+
+void OdaGir(AnsiString Oda)
+{
+AnsiString Komut= "<msg t='xt'><body action='xtReq' r='1'><![CDATA[<dataObj><var n='cmd' t='s'>superJoin</var><obj t='o' o='param'><var n='autoRoom' t='n'>1</var><var n='pass' t='s'></var><var n='roomId' t='n'>"+Oda+"</var></obj><var n='name' t='s'>texasLogin</var></dataObj>]]></body></msg>";
+Form1->ClientSocket1->Socket->SendBuf( Komut.c_str(),Komut.Length()+1);
+Form1->ClientSocket2->Socket->SendBuf( Komut.c_str(),Komut.Length()+1);
+Form1->ClientSocket3->Socket->SendBuf( Komut.c_str(),Komut.Length()+1);
+Form1->ClientSocket4->Socket->SendBuf( Komut.c_str(),Komut.Length()+1);
+}
+
+
+void OdaRefres()
+{
+	AnsiString Komut= "<msg t='xt'><body action='xtReq' r='1'><![CDATA[<dataObj><obj t='o' o='param'></obj><var n='name' t='s'>texasLogin</var><var n='cmd' t='s'>displayRoomList</var></dataObj>]]></body></msg>";
+	Form1->ClientSocket1->Socket->SendBuf( Komut.c_str(),Komut.Length()+1);
+}
+
+AnsiString Komut_Parcala(AnsiString &gel)
+{
+	AnsiString Parcala="";
+	int d=gel.Pos("%")  ;
+	if(d)
+	{
+		Parcala=AnsiMidStr(gel , d+1 , gel.Length());
+		d=Parcala.Pos("%") ;
+		gel=AnsiMidStr(Parcala , d , Parcala.Length());
+		Parcala=AnsiLeftStr(Parcala,d-1);
+	}
+	return Parcala;
+}
+String OyunToplamPara;
+String Oda;
+int kartlar[4][2];
+int kartrenk[4][2];
+int orta[5];
+int ortarenk[5];
+int VeriGeldi(AnsiString buf,int socno)
+{
+	String Parcala,Komut;
+	String Aranan;
+	int d;
+	Form1->Memo1->Lines->Add(buf);
+	if(buf.Pos("findRoom"))
+	{
+		d= buf.Pos(",");
+		String Parcala=AnsiMidStr(buf , d+1 , buf.Length());
+		d=Parcala.Pos(",") ;
+		String Oda=AnsiLeftStr(Parcala,d-1);
+	}
+	if(buf.Pos("logOK"))
+	{
+		Aranan="email' t='s'>1:";
+		d=buf.Pos(Aranan)  ;
+		if(d)
+		{
+			Parcala=AnsiMidStr(buf , d+Aranan.Length() , buf.Length());
+			d=Parcala.Pos("<") ;
+			String UID=AnsiLeftStr(Parcala,d-1);
+			Aranan= "<var n='points' t='n'>";
+			d=Parcala.Pos(Aranan)  ;
+			if(!d)
+			return 1;
+			Parcala=AnsiMidStr(Parcala , d+Aranan.Length() , Parcala.Length());
+			d=Parcala.Pos("<") ;
+			OyunToplamPara=AnsiLeftStr(Parcala,d-1);
+		}
+		return 1;
+	}
+	int odavar=buf.Pos("joinOK' r='")  ;
+	if(odavar)
+	{
+		Aranan="joinOK' r='";
+		Parcala=AnsiMidStr(buf , odavar+Aranan.Length() , buf.Length());
+		odavar=Parcala.Pos("'") ;
+		Oda=AnsiLeftStr(Parcala,odavar-1);
+		String KoltukNo="-1";
+		Aranan="bigBlind' t='n'><![CDATA[";
+		odavar=buf.Pos(Aranan)  ;
+		if(odavar)
+		{
+			Parcala=AnsiMidStr(buf , odavar+Aranan.Length() , buf.Length());
+			odavar=Parcala.Pos("]") ;
+			String MaxBling=AnsiLeftStr(Parcala,odavar-1);
+			int Buytutar= MaxBling.ToIntDef(500000000) *10;
+			int ParaNe=OyunToplamPara.ToIntDef(0);
+			if(Buytutar> ParaNe)
+			{
+			  //	Form3->RelogTime->Interval=5000;
+			 //	Form3->RelogTime->Enabled=true;
+			}
+			else
+			{
+			 //	Form3->MasaBuy->Text=IntToStr(Buytutar);
+			}
+
+		}
+		Aranan="'sitsFilled' t='n'><![CDATA[";
+		d=buf.Pos(Aranan)  ;
+		if(d)
+		{
+		Parcala=AnsiMidStr(buf , d+Aranan.Length() , buf.Length());
+			d=Parcala.Pos("]") ;
+			String NumberPlayer=AnsiLeftStr(Parcala,d-1);
+		   //	Form3->Label9->Caption="Player Sayi: "+NumberPlayer;
+			//if(NumberPlayer.ToIntDef(0)<Form3->MinPlayer->Text.ToIntDef(10))
+			//{
+			  //	Form3->RelogTime->Interval=5000;
+			  //	Form3->RelogTime->Enabled=true;
+				//return 1;
+			//}
+			if((NumberPlayer.ToIntDef(0)==9)||(NumberPlayer.ToIntDef(0)==0))
+			{
+			  //	Form3->RelogTime->Interval=5000;
+			  //	Form3->RelogTime->Enabled=true;
+				return 1;
+			}
+		}
+		return 1;
+	}
+	if(buf.Pos("displayRoomList"))
+	{
+		Odalar="";
+		Odalar=AnsiString(buf);
+		RoomAl=true;
+		OdaListesi.clear();
+	}
+	if(RoomAl)
+	{
+		Odalar+=AnsiString(buf);
+		if(buf.Pos(",</var></obj></dataObj>]]></body></msg>") )
+		{
+			Form1->Memo1->Lines->Add("Girildi");
+			OdaDuzenle();
+		   	int odasayi= OdaListesi.size();
+			RoomAl=false;
+			Form1->Memo1->Lines->Add("Odalar Alindi "+IntToStr(odasayi));
+		}
+		return 1;
+	}
+if(buf.Pos("%xt%"))
+{
+	Parcala=  Komut_Parcala(buf);
+	Komut=  Komut_Parcala(buf);
+	if(Komut=="sitJoined")
+	{
+		String Aranan="uid=";
+		int d=buf.Pos(Aranan)  ;
+		if(d)
+		{
+			Parcala=AnsiMidStr(buf , d+Aranan.Length() , buf.Length());
+			d=Parcala.Pos("%") ;
+			Parcala=AnsiLeftStr(Parcala,d-1);
+			if(UID==Parcala)
+			{
+				Parcala=  Komut_Parcala(buf);
+				Parcala=    Komut_Parcala(buf);
+				Parcala=    Komut_Parcala(buf);
+				Parcala=    Komut_Parcala(buf);
+				KoltukNo=    Komut_Parcala(buf);
+				return 1;
+			}
+
+		}
+	}
+	else if(Komut=="markTurn")
+	{
+		Komut_Parcala(buf);
+		Parcala=  Komut_Parcala(buf);
+		//int dMaxKart=	Form1->HolesMax1->ItemIndex+2;
+		if(Parcala==KoltukNo+".0")
+		{
+			return 1;
+		}
+	}
+	else if(Komut=="raiseOption")
+	{
+		Komut_Parcala(buf);
+		calltutar=  Komut_Parcala(buf);
+		Raisetutar =  Komut_Parcala(buf);
+		AllinTutar= Komut_Parcala(buf);
+		Form1->Caption= calltutar+":"+Raisetutar+":"+AllinTutar+" / "+MaxBling;
+	}
+	else if(Komut=="dealHoles")
+	{
+		Komut_Parcala(buf);
+		Parcala=    Komut_Parcala(buf);
+		if(Parcala=="-1")
+		{
+
+		}
+		else
+		{
+			if(KoltukNo=="-1")
+			{
+				Parcala.SetLength(1) ;
+				KoltukNo=Parcala;
+				//Form1->Label2->Caption="dealHoles"+KoltukNo;
+			}
+		}
+		Parcala=  Komut_Parcala(buf);
+		String Renk=  Komut_Parcala(buf);
+		kartlar[socno][0]= StrToInt(Parcala);
+		kartrenk[socno][0] = StrToInt(Renk);
+		Parcala=  Komut_Parcala(buf);
+
+		Renk=  Komut_Parcala(buf);
+		kartlar[socno][1]= StrToInt(Parcala);
+		kartrenk[socno][1] = StrToInt(Renk);
+		Form1->Memo2->Lines->Add(IntToStr(socno)+"-"+IntToStr(kartrenk[socno][0])+"."+IntToStr(kartlar[socno][0])+":"+IntToStr(kartrenk[socno][0])+"."+IntToStr(kartlar[socno][1]));
+
+	}
+	else if(Komut=="flop")
+	{
+		Komut_Parcala(buf);
+		Parcala=  Komut_Parcala(buf);
+		String Renk=  Komut_Parcala(buf);
+		/*Poker_Kart.Ucuncu= StrToInt(Parcala);
+		KartEkle(Poker_Kart.Ucuncu,StrToInt(Renk));
+		Form1->Kart3->Caption=Parcala+":"+Renk;
+		Parcala=  Komut_Parcala(gel);
+		Renk=  Komut_Parcala(gel);
+		Poker_Kart.Dorduncu= StrToInt(Parcala);
+		KartEkle(Poker_Kart.Dorduncu,StrToInt(Renk));
+		Form1->Kart4->Caption=Parcala+":"+Renk;
+		Parcala=  Komut_Parcala(gel);
+		Renk=  Komut_Parcala(gel);
+		Poker_Kart.Besinci= StrToInt(Parcala);
+		KartEkle(Poker_Kart.Besinci,StrToInt(Renk));
+		Form1->Kart5->Caption=Parcala+":"+Renk;
+		Poker_Kart.oyunSira=5000;
+		Form1->CiftKart->Caption="";
+		KartDurum();   */
+	}
+	else if(Komut=="street")
+	{
+		//Poker_Kart.oyunSira=6000 ;
+		//Form1->CiftKart->Caption="";
+		Komut_Parcala(buf);
+		Parcala=  Komut_Parcala(buf);
+		String Renk=  Komut_Parcala(buf);
+		/*Poker_Kart.Ucuncu= StrToInt(Parcala);
+		KartEkle(Poker_Kart.Ucuncu,StrToInt(Renk));
+		KartDurum();     */
+	}
+	else if(Komut=="river")
+	{
+		//Poker_Kart.oyunSira=7000;
+		//Form1->CiftKart->Caption="";
+		Komut_Parcala(buf);
+		Parcala=  Komut_Parcala(buf);
+		String Renk=  Komut_Parcala(buf);
+		/*Poker_Kart.Ucuncu= StrToInt(Parcala);
+		KartEkle(Poker_Kart.Ucuncu,StrToInt(Renk));
+		KartDurum();  */
+	}
+	else if(Komut=="updateChips")
+	{
+		Komut_Parcala(buf);
+		ParaAl:
+		Parcala=  Komut_Parcala(buf);
+		if(Parcala=="")
+			return 1;
+		if(Parcala==KoltukNo)
+		{
+			MasaPara=  Komut_Parcala(buf);
+			ToplamPara= Komut_Parcala(buf);
+			//Form1->ToplamPara->Caption=ToplamPara;
+			//Form1->MasaPara->Caption=MasaPara;
+			//if(StrToInt(MasaPara)> StrToInt(Form1->RePot->Text))
+			//{
+				//Form1->Button9->Click();
+			//}
+			return 1;
+		}
+		else
+		{
+			Komut_Parcala(buf);
+			Komut_Parcala(buf);
+			goto ParaAl;
+		}
+	}
+	else if(Komut=="allin")
+	{
+		Komut_Parcala(buf);
+		Komut_Parcala(buf);
+		calltutar=  Komut_Parcala(buf);
+		return 1;
+	}
+	else if(Komut=="call")
+	{
+		Komut_Parcala(buf);
+		Komut_Parcala(buf);
+		calltutar=  Komut_Parcala(buf);
+		return 1;
+	}
+   else if(Komut=="postBlind")
+   {
+		Komut_Parcala(buf);
+		Komut_Parcala(buf);
+		PostBling= Komut_Parcala(buf);
+		return 1;
+   }
+   else if(Komut=="userSitOut")
+   {
+		Komut_Parcala(buf);
+		Parcala=  Komut_Parcala(buf);
+		if(Parcala==KoltukNo)
+		{
+			//Form1->Otur->Click();
+			return 255;
+		}
+   }
+}
+}
+
+
+String Server_Parcala(String &gel)
+{
+	String Parcala="";
+	int d=gel.Pos("=")  ;
+	if(d)
+	{
+		Parcala=AnsiMidStr(gel , d+1 , gel.Length());
+		d=Parcala.Pos(",") ;
+		gel=AnsiMidStr(Parcala , d , Parcala.Length());
+		Parcala=AnsiLeftStr(Parcala,d-1);
+	}
+	return Parcala;
+}
+void __fastcall TForm1::ServerlerListeClick(TObject *Sender)
+{
+ServerlerListeIp->ItemIndex = ServerlerListe->ItemIndex;
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::Button1Click(TObject *Sender)
+{
+	ClientSocket1->Host=  ServerlerListeIp->Items->Strings[ServerlerListeIp->ItemIndex];
+	ClientSocket2->Host=  ServerlerListeIp->Items->Strings[ServerlerListeIp->ItemIndex];
+	ClientSocket3->Host=  ServerlerListeIp->Items->Strings[ServerlerListeIp->ItemIndex];
+	ClientSocket4->Host=  ServerlerListeIp->Items->Strings[ServerlerListeIp->ItemIndex];
+if(ClientSocket1->Socket->Connected)
+{
+  ClientSocket1->Active=false;
+}
+while(ClientSocket1->Socket->Connected)
+{
+Application->ProcessMessages();
+Sleep(0);
+
+}
+ClientSocket1->Active=true;
+ClientSocket2->Active=true;
+ClientSocket3->Active=true;
+ClientSocket4->Active=true;
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::Button2Click(TObject *Sender)
+{
+	if(URLDownloadToFileA(0,"http://facebook2.poker.zynga.com/poker/server_status.php","pokerserverler.txt",0,0)==S_OK)
+	{
+		TStringList *Serverler;
+		Serverler= new   TStringList();
+		Serverler->LoadFromFile("pokerserverler.txt");
+		for (int i = 0; i < Serverler->Count ; i++)
+		{
+			String a=Serverler->Strings[i];
+			String Ip=	Server_Parcala(a);
+			String Name = Server_Parcala(a);
+			ServerlerListeIp->Items->Add(Ip);
+			ServerlerListe->Items->Add(Name)  ;
+		}
+		Serverler->Free();
+		ServerlerListeIp->ItemIndex=0;
+		ServerlerListe->ItemIndex=0;
+	}
+	else
+	{
+		return;
+	}	
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::FormCreate(TObject *Sender)
+{
+Form2 = new TForm2(NULL);
+
+Form2->Show();
+Form2->BringToFront();
+		TStringList *Serverler;
+		Serverler= new   TStringList();
+		Serverler->LoadFromFile("pokerserverler.txt");
+		for (int i = 0; i < Serverler->Count ; i++)
+		{
+			String a=Serverler->Strings[i];
+			String Ip=	Server_Parcala(a);
+			String Name = Server_Parcala(a);
+			ServerlerListeIp->Items->Add(Ip);
+			ServerlerListe->Items->Add(Name)  ;
+		}
+		Serverler->Free();
+		ServerlerListeIp->ItemIndex=0;
+		ServerlerListe->ItemIndex=0;	
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::ClientSocket1Connect(TObject *Sender,
+      TCustomWinSocket *Socket)
+{
+Memo1->Lines->Add("Connected");
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::ClientSocket1Disconnect(TObject *Sender,
+      TCustomWinSocket *Socket)
+{
+Memo1->Lines->Add("Disconnected");
+}
+//---------------------------------------------------------------------------
+ AnsiString a="";
+void __fastcall TForm1::ClientSocket1Read(TObject *Sender,
+	  TCustomWinSocket *Socket)
+{
+TClientSocket *Item = dynamic_cast<TClientSocket *>(Sender);
+
+
+a += Socket->ReceiveText();
+
+	if(a.Pos("</cross-domain-policy>"))
+	{
+		Form1->Memo1->Lines->Add("Giriliyor");
+	}
+if ((a.Pos("</msg>"))||((a.SubString(1,1)=="%")&&(a.SubString(a.Length()-1,1)=="%"))) {
+VeriGeldi(a,Item->Tag);
+a = "";
+}
+
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::Button3Click(TObject *Sender)
+{
+ClientSocket1->Socket->SendBuf(GirisData1.c_str(),GirisData1.Length() +1);
+ClientSocket2->Socket->SendBuf(GirisData2.c_str(),GirisData2.Length() +1);
+ClientSocket3->Socket->SendBuf(GirisData3.c_str(),GirisData3.Length() +1);
+ClientSocket4->Socket->SendBuf(GirisData4.c_str(),GirisData4.Length() +1);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button4Click(TObject *Sender)
+{
+ String Masano=Edit1->Text;//MasaList->Items->Strings[MasaList->ItemIndex];
+Komut_Parcala(Masano)  ;
+	OdaGir(Masano);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button5Click(TObject *Sender)
+{
+String Para=MasaBuy->Text;
+String Gidecek="<msg t='xt'><body action='xtReq' r='"+Oda+"'><![CDATA[<dataObj><var n='cmd' t='s'>sit</var><var n='name' t='s'>gameRoom</var><obj t='o' o='param'><var n='hsmStatus' t='n'>1</var><var n='_cmd' t='s'>sit</var><var n='autoRebuy' t='n'>0</var><var n='rakeEnable' t='n'>0</var><var n='postToPlay' t='n'>1</var><var n='buyIn' t='n'>"+Para+"</var><var n='sitNo' t='n'>7</var><var n='autoTopOff' t='n'>0</var></obj></dataObj>]]></body></msg>";
+//String Gidecek="<msg t='xt'><body action='xtReq' r='"+Oda+"'><![CDATA[<dataObj><var n='name' t='s'>gameRoom</var><obj t='o' o='param'><var n='buyIn' t='n'>"+Para+"</var><var n='_cmd' t='s'>sit</var><var n='postToPlay' t='n'>1</var><var n='sitNo' t='n'>"+KoltukNo+"</var></obj><var n='cmd' t='s'>sit</var></dataObj>]]></body></msg>";
+Form1->ClientSocket1->Socket->SendBuf( Gidecek.c_str(),Gidecek.Length()+1);
+Form1->ClientSocket2->Socket->SendBuf( Gidecek.c_str(),Gidecek.Length()+1);
+Form1->ClientSocket3->Socket->SendBuf( Gidecek.c_str(),Gidecek.Length()+1);
+Form1->ClientSocket4->Socket->SendBuf( Gidecek.c_str(),Gidecek.Length()+1);
+Form2->osend(Form2->OynSocket, Gidecek.c_str(),Gidecek.Length()+1,0);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::MasaListDblClick(TObject *Sender)
+{
+MasaList->Sorted = True;
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm1::Button6Click(TObject *Sender)
+{
+//String Gidecek="<msg t='xt'><body action='xtReq' r='"+Oda+"'><![CDATA[<dataObj><var n='name' t='s'>gameRoom</var><obj t='o' o='param'><var n='_cmd' t='s'>act</var><var n='chips' t='n'>"+calltutar+"</var><var n='action' t='s'>c</var></obj><var n='cmd' t='s'>act</var></dataObj>]]></body></msg>";
+String Gidecek="<msg t='xt'><body action='xtReq' r='"+Oda+"'><![CDATA[<dataObj><var n='name' t='s'>gameRoom</var><var n='cmd' t='s'>act</var><obj t='o' o='param'><var n='_cmd' t='s'>act</var><var n='action' t='s'>c</var><var n='chips' t='n'>"+calltutar+"</var></obj></dataObj>]]></body></msg>";
+ClientSocket1->Socket->SendBuf(Gidecek.c_str(),Gidecek.Length() +1);
+ClientSocket2->Socket->SendBuf(Gidecek.c_str(),Gidecek.Length() +1);
+ClientSocket3->Socket->SendBuf(Gidecek.c_str(),Gidecek.Length() +1);
+ClientSocket4->Socket->SendBuf(Gidecek.c_str(),Gidecek.Length() +1);
+Form2->osend(Form2->OynSocket, Gidecek.c_str(),Gidecek.Length()+1,0);
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button7Click(TObject *Sender)
+{
+String Gidecek="<msg t='xt'><body action='xtReq' r='"+Oda+"'><![CDATA[<dataObj><var n='name' t='s'>gameRoom</var><var n='cmd' t='s'>act</var><obj t='o' o='param'><var n='_cmd' t='s'>act</var><var n='action' t='s'>r</var><var n='chips' t='n'>"+Edit2->Text+"</var></obj></dataObj>]]></body></msg>";
+ClientSocket1->Socket->SendBuf(Gidecek.c_str(),Gidecek.Length() +1);
+ClientSocket2->Socket->SendBuf(Gidecek.c_str(),Gidecek.Length() +1);
+ClientSocket3->Socket->SendBuf(Gidecek.c_str(),Gidecek.Length() +1);
+ClientSocket4->Socket->SendBuf(Gidecek.c_str(),Gidecek.Length() +1);
+Form2->osend(Form2->OynSocket, Gidecek.c_str(),Gidecek.Length()+1,0);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button8Click(TObject *Sender)
+{
+String Gidecek="<msg t='xt'><body action='xtReq' r='"+Oda+"'><![CDATA[<dataObj><var n='name' t='s'>gameRoom</var><var n='cmd' t='s'>act</var><obj t='o' o='param'><var n='_cmd' t='s'>act</var><var n='action' t='s'>f</var><var n='chips' t='n'>-1</var></obj></dataObj>]]></body></msg>";
+ClientSocket1->Socket->SendBuf(Gidecek.c_str(),Gidecek.Length() +1);
+ClientSocket2->Socket->SendBuf(Gidecek.c_str(),Gidecek.Length() +1);
+ClientSocket3->Socket->SendBuf(Gidecek.c_str(),Gidecek.Length() +1);
+ClientSocket4->Socket->SendBuf(Gidecek.c_str(),Gidecek.Length() +1);
+Form2->osend(Form2->OynSocket, Gidecek.c_str(),Gidecek.Length()+1,0);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button9Click(TObject *Sender)
+{
+Memo1->Lines->SaveToFile("dosya.txt");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button10Click(TObject *Sender)
+{
+Memo1->Clear();
+}
+//---------------------------------------------------------------------------
+

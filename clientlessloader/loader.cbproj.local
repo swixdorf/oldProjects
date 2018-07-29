@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2012.12.27 04:08:36.685.cpp,C:\Users\swixdorf\Documents\RAD Studio\Projects\Unit1.cpp=C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessloader\Unit1.cpp</Transaction>
+    <Transaction>2012.12.27 04:08:36.697.h,C:\Users\swixdorf\Documents\RAD Studio\Projects\Unit1.h=C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessloader\Unit1.h</Transaction>
+    <Transaction>2012.12.27 04:08:36.697.dfm,C:\Users\swixdorf\Documents\RAD Studio\Projects\Unit1.dfm=C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessloader\Unit1.dfm</Transaction>
+    <Transaction>2012.12.27 04:08:37.414.cbproj,C:\Users\swixdorf\Documents\RAD Studio\Projects\Project1.cbproj=C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessloader\Project1.cbproj</Transaction>
+    <Transaction>2012.12.27 04:13:40.663.cbproj,C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessloader\Project1.cbproj=C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessloader\laoder.cbproj</Transaction>
+    <Transaction>2013.01.21 00:09:57.413.cbproj,C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessloader\laoder.cbproj=C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessloader\loader.cbproj</Transaction>
+  </Transactions>
+</BorlandProject>

@@ -1,0 +1,122 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#include <windows.h>
+#include <ScktComp.hpp>
+#include "ProcScan.h"
+#pragma hdrstop
+//---------------------------------------------------------------------------
+//   Important note about DLL memory management when your DLL uses the
+//   static version of the RunTime Library:
+//
+//   If your DLL exports any functions that pass String objects (or structs/
+//   classes containing nested Strings) as parameter or function results,
+//   you will need to add the library MEMMGR.LIB to both the DLL project and
+//   any other projects that use the DLL.  You will also need to use MEMMGR.LIB
+//   if any other projects which use the DLL will be performing new or delete
+//   operations on any non-TObject-derived classes which are exported from the
+//   DLL. Adding MEMMGR.LIB to your project will change the DLL and its calling
+//   EXE's to use the BORLNDMM.DLL as their memory manager.  In these cases,
+//   the file BORLNDMM.DLL should be deployed along with your DLL.
+//
+//   To avoid using BORLNDMM.DLL, pass string information using "char *" or
+//   ShortString parameters.
+//
+//   If your DLL uses the dynamic version of the RTL, you do not need to
+//   explicitly add MEMMGR.LIB as this will be done implicitly for you
+//---------------------------------------------------------------------------
+
+#pragma argsused
+
+ SOCKET OyunSocket;
+typedef int (WINAPI* r_send)(SOCKET sock, BYTE* buf, int len, int flags);
+r_send osend;
+
+typedef int (WINAPI* r_recv)(SOCKET sock, BYTE* buf, int len, int flags);
+r_recv orecv;
+
+  int __stdcall SahteRecv(SOCKET s, char *buf, int len, int flags)
+  {
+		memset(buf,0,len);
+		int rlen=   orecv(s, buf,len,flags);
+		if(rlen==-1)
+		{
+
+		 return rlen;
+		}
+
+		int index=0;
+Devam:
+AnsiString a=AnsiString((char* )&buf[index]);
+int Par;//= Yaz(a,buf,&rlen);
+
+if( Par==255)
+return -1;
+ int clen= a.Length();
+
+if((clen+index+2)<rlen)
+{
+ index+= clen+1     ;
+goto  Devam ;
+}
+	 return rlen;
+
+}
+
+ int __stdcall MyRecv(SOCKET s, char *buf, int len, int flags)
+  {
+  OyunSocket=s;
+	return SahteRecv(s, buf,len,flags);
+
+ }
+
+
+ AnsiString GirisAktar="";
+
+ int __stdcall MySend(SOCKET s, char *buf, int len, int flags)
+ {
+ OyunSocket=s;
+// Form1->Memo1->Lines->Add( AnsiString(buf)); ;
+  if(AnsiString(buf).Pos("login z='TexasHoldemUp"))
+	 {
+
+GirisAktar= AnsiString(buf) ;
+TStringList *s =new TStringList();
+
+	   s->Add(GirisAktar) ;
+	   s->SaveToFile("Account\\asd.acc");
+	   s->Free();
+	   ShowMessage("Kayit Alindi");
+	   Application->Terminate();
+	   }
+
+
+
+
+   return osend(s, buf,len,flags);
+ }
+
+
+ 
+int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved)
+{
+ /*
+HANDLE a=0;
+
+
+   AnsiString NameDll= "Flash10l.ocx";
+if(!ListProcessModules(GetCurrentProcessId(),NameDll)) return 1;
+
+a=GetModuleHandle(NameDll.c_str()) ;
+
+if(a==0)
+{
+	return 1 ;
+}
+
+BuildImportTable((DWORD)a,(DWORD)MyRecv,"16","WS2_32.dll");
+BuildImportTable((DWORD)a,(DWORD)MySend,"19","WS2_32.dll");
+ShowMessage("done");
+	return 1;   */
+}
+//---------------------------------------------------------------------------

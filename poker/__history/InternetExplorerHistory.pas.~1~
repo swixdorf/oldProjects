@@ -1,0 +1,50 @@
+unit InternetExplorerHistory;
+
+interface
+
+uses
+  Windows, ComObj, ActiveX;
+
+procedure ClearInternetExplorerHistory;
+
+const
+  CLSID_CUrlHistory: TGUID = '{3C374A40-BAE4-11CF-BF7D-00AA006946EE}';
+
+type
+  TSTATURL = record
+    cbSize: DWORD;
+    pwcsUrl: DWORD;
+    pwcsTitle: DWORD;
+    ftLastVisited: FILETIME;
+    ftLastUpdated: FILETIME;
+    ftExpires: FILETIME;
+    dwFlags: DWORD;
+  end;
+
+  IEnumSTATURL = interface(IUnknown)
+    ['{3C374A42-BAE4-11CF-BF7D-00AA006946EE}']
+    function Next(celt: Integer; out elt; pceltFetched: PLongint): HRESULT; stdcall;
+    function Skip(celt: Longint): HRESULT; stdcall;
+    function Reset: HResult; stdcall;
+    function Clone(out ppenum: IEnumSTATURL): HResult; stdcall;
+    function SetFilter(poszFilter: PWideChar; dwFlags: DWORD): HResult; stdcall;
+  end;
+
+  IUrlHistoryStg = interface(IUnknown)
+    ['{3C374A41-BAE4-11CF-BF7D-00AA006946EE}']
+    function AddUrl(pocsUrl: PWideChar; pocsTitle: PWideChar; dwFlags: Integer): HResult; stdcall;
+    function DeleteUrl(pocsUrl: PWideChar; dwFlags: Integer): HResult; stdcall;
+    function QueryUrl(pocsUrl: PWideChar; dwFlags: Integer; var lpSTATURL: TSTATURL): HResult; stdcall;
+    function BindToObject(pocsUrl: PWideChar; var riid: TIID; out ppvOut: Pointer): HResult; stdcall;
+    function EnumUrls(out ppenum: IEnumSTATURL): HResult; stdcall;
+  end;
+
+  IUrlHistoryStg2 = interface(IUrlHistoryStg)
+    ['{AFA0DC11-C313-11D0-831A-00C04FD5AE38}']
+    function AddUrlAndNotify(pocsUrl: PWideChar; pocsTitle: PWideChar; dwFlags: Integer;
+fWriteHistory: Integer; var poctNotify: Pointer;
+    const punkISFolder: IUnknown): HResult; stdcall;
+    function ClearHistory: HResult; stdcall;
+  end;
+
+implementation

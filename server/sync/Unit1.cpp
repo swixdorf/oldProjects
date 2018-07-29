@@ -1,0 +1,139 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "Unit1.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm1 *Form1;
+//---------------------------------------------------------------------------
+__fastcall TForm1::TForm1(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+int dbcount;
+	TSession		*mySession[16];
+	TDatabase		*myDatabase[16];
+	TQuery          *myQuery[16];
+void __fastcall TForm1::ConnectClick(TObject *Sender)
+{
+dbcount = dbs->Lines->Count ;
+
+
+for (int i = 0; i < dbcount; i++) {
+mySession[i]					= new TSession(NULL);
+myDatabase[i]					= new TDatabase(NULL);
+myQuery[i]						= new TQuery(NULL);
+mySession[i]->SessionName		= dbs->Lines->Strings[i]+"_session" ;
+myDatabase[i]->SessionName		= dbs->Lines->Strings[i]+"_session" ;
+myQuery[i]->SessionName			= dbs->Lines->Strings[i]+"_session" ;
+myDatabase[i]->DatabaseName 	= dbs->Lines->Strings[i];
+myQuery[i]->DatabaseName		= dbs->Lines->Strings[i];
+mySession[i]->NetFileDir		= ExtractFilePath(Application->ExeName)+"sessions\\"+IntToStr(i);
+
+
+myDatabase[i]->BeforeConnect	= DatabaseBeforeConnect;
+myDatabase[i]->AfterConnect		= DatabaseAfterConnect;
+myDatabase[i]->BeforeDisconnect	= DatabaseBeforeDisconnect;
+myDatabase[i]->AfterDisconnect	= DatabaseAfterDisconnect;
+myDatabase[i]->LoginPrompt		= false;
+
+myDatabase[i]->Connected		= true;
+mySession[i]->Active			= true;
+}
+
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm1::DatabaseBeforeConnect(TObject *Sender)
+{
+TDatabase		*DB;
+DB = dynamic_cast<TDatabase*>(Sender);
+Memo1->Lines->Add(DB->SessionName);
+Memo1->Lines->Add("Connecting...");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::DatabaseAfterConnect(TObject *Sender)
+{
+TDatabase		*DB;
+DB = dynamic_cast<TDatabase*>(Sender);
+Memo1->Lines->Add(DB->SessionName);
+Memo1->Lines->Add("Connected...");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::DatabaseAfterDisconnect(TObject *Sender)
+{
+TDatabase		*DB;
+DB = dynamic_cast<TDatabase*>(Sender);
+Memo1->Lines->Add(DB->SessionName);
+Memo1->Lines->Add("DisConnected...");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::DatabaseBeforeDisconnect(TObject *Sender)
+{
+TDatabase		*DB;
+DB = dynamic_cast<TDatabase*>(Sender);
+Memo1->Lines->Add(DB->SessionName);
+Memo1->Lines->Add("DisConnecting...");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::UserCountClick(TObject *Sender)
+{
+for (int i = 0; i < dbcount; i++) {
+myQuery[i]->Close();
+myQuery[i]->SQL->Clear();
+myQuery[i]->SQL->Add("SELECT COUNT(*) from users");
+myQuery[i]->Open();
+if (myQuery[i]->RecordCount>0) {
+Memo1->Lines->Add(dbs->Lines->Strings[i]);
+Memo1->Lines->Add(myQuery[i]->FieldByName("COUNT(*)")->Value);
+}
+myQuery[i]->Close();
+myQuery[i]->SQL->Clear();
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::UnUsedCodeClick(TObject *Sender)
+{
+for (int i = 0; i < dbcount; i++) {
+myQuery[i]->Close();
+myQuery[i]->SQL->Clear();
+myQuery[i]->SQL->Add("SELECT COUNT(*) from codes where code_active = 0");
+myQuery[i]->Open();
+if (myQuery[i]->RecordCount>0) {
+Memo1->Lines->Add(dbs->Lines->Strings[i]);
+Memo1->Lines->Add(myQuery[i]->FieldByName("COUNT(*)")->Value);
+}
+myQuery[i]->Close();
+myQuery[i]->SQL->Clear();
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::DisconnectClick(TObject *Sender)
+{
+for (int i = 0; i < dbcount; i++) {
+myDatabase[i]->Connected		= false;
+mySession[i]->Active			= false;
+mySession[i]->Free();
+myDatabase[i]->Free();
+myQuery[i]->Free();
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::FormClose(TObject *Sender, TCloseAction &Action)
+{
+DisconnectClick(0);
+}
+//---------------------------------------------------------------------------
+

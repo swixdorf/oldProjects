@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2012.04.21 17:04:17.064.cbproj,I:\PokerTH engine frame mesaj socket19042012\ZyngaPokerMesaj.cbproj=I:\PokerTH engine frame mesaj socket19042012\ZyngaPokerMesaj.cbproj</Transaction>
+    <Transaction>2012.04.21 17:05:03.699.cpp,I:\PokerTH engine frame mesaj socket19042012\Accountkayit.cpp=I:\PokerTH engine frame mesaj socket19042012\ZyngaPokerMesaj.cpp</Transaction>
+    <Transaction>2012.04.21 17:06:04.508.cpp,I:\PokerTH engine frame mesaj socket19042012\Unit2.cpp=</Transaction>
+    <Transaction>2012.04.21 17:06:04.508.dfm,I:\PokerTH engine frame mesaj socket19042012\Unit2.dfm=</Transaction>
+    <Transaction>2012.04.21 17:06:09.449.cpp,I:\PokerTH engine frame mesaj socket19042012\Unit1.cpp=</Transaction>
+    <Transaction>2012.04.21 17:06:09.449.dfm,I:\PokerTH engine frame mesaj socket19042012\Unit1.dfm=</Transaction>
+  </Transactions>
+</BorlandProject>

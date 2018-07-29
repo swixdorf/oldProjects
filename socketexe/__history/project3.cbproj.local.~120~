@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2012.12.07 00:47:55.195.cbproj,C:\Users\HLM\Documents\RAD Studio\Projects\Project3.cbproj=C:\Users\HLM\Documents\RAD Studio\Projects\socketkonsolo\Project3.cbproj</Transaction>
+    <Transaction>2012.12.09 09:36:39.777.cpp,C:\Users\swixdorf\Desktop\mysock\swx.cpp=</Transaction>
+    <Transaction>2012.12.09 09:36:41.508.h,C:\Users\swixdorf\Desktop\mysock\swx.h=</Transaction>
+    <Transaction>2012.12.27 04:13:05.647.cbproj,C:\Users\swixdorf\Desktop\socketexe\Project3.cbproj=C:\Users\swixdorf\Desktop\socketexe\loader.cbproj</Transaction>
+    <Transaction>2012.12.27 04:13:34.269.cbproj,C:\Users\swixdorf\Desktop\socketexe\loader.cbproj=C:\Users\swixdorf\Desktop\socketexe\project3.cbproj</Transaction>
+  </Transactions>
+</BorlandProject>

@@ -1,0 +1,40 @@
+String a=IntToHex((int)GetCurrentProcessId(),8);
+a+="Adr" ;
+String b=IntToHex((int)GetCurrentProcessId(),8);
+b+="Chr" ;
+HANDLE hFile = CreateFileMapping((HANDLE)0xFFFFFFFF,NULL,PAGE_READWRITE,0,1024,a.c_str());
+LPVOID lpMap = MapViewOfFile(hFile,FILE_MAP_READ|FILE_MAP_WRITE,0 ,0,0);
+for (int i = 0; i < 32; i++) {
+memcpy(&Adresler[i],(void*)((int)lpMap + i*4),4);
+Adresler[i]-=SpecialOffsetCryptKey;
+}
+HANDLE hFileMap2 = CreateFileMapping((HANDLE)0xFFFFFFFF,NULL,PAGE_READWRITE,0,32,b.c_str());
+LPVOID lpView2 = MapViewOfFile(hFileMap2,FILE_MAP_READ|FILE_MAP_WRITE,0,0,0);
+strcpy(CarAdi,(LPSTR)lpView2);
+
+KoCaption=		Adresler[0];
+GELEN_1_HOOKADRES=	Adresler[1];
+GELEN_2_HOOKADRES=	Adresler[2];
+GELEN_3_HOOKADRES=	Adresler[3];
+GIDEN_HOOKCALLADRES=      Adresler[4];
+GIDEN_HOOKADRES=          Adresler[5];
+GIDEN_1=			Adresler[6];
+INVENTORY_ADRES=   	Adresler[7];
+YaratikSec_1=		Adresler[8];
+YaratikSec_2=		Adresler[9];
+YaratikSec_3=		Adresler[10];
+YaratikSec_4=		Adresler[11];
+KOofset=			Adresler[12];
+PASSWORD_PAR=		Adresler[13];
+PASSWORD_ADR=		Adresler[14];
+EXIT_ADR=			Adresler[15];
+LOGIN_1= 			Adresler[16];
+LOGIN_2= 			Adresler[17];
+LOGIN_3=                  Adresler[18];
+LOGIN_4=                  Adresler[19];
+LOGIN_5=                  Adresler[20];
+LOGIN_6=                  Adresler[21];
+LOGIN_7=			Adresler[22];
+ADRES_41=			Adresler[23];
+BLOCK_41=			Adresler[24];
+SEND_HOOK=          Adresler[25];

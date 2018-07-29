@@ -1,0 +1,1 @@
+extern "C" __declspec(dllimport) void * WINAPI KoClassOlustur ();

@@ -1,0 +1,120 @@
+ typedef struct{
+			char OdaIsmi[35];
+			int  OdaNo;
+			int MinPot;
+			int MaxPot;
+			int MaxPara;
+			int MaxOtur;
+			int MinPara;
+			int OdaTip;
+}OdaListe;
+OdaListe OdaListeEkle;
+std::vector<OdaListe> OdaListesi;
+ AnsiString Odalar="";
+ int OdaIndex=0;
+ bool RoomAl=false;
+ AnsiString UID;
+ AnsiString KoltukNo;
+
+AnsiString OdaAyir(AnsiString &gel)
+{
+	AnsiString Parcala="";
+	int d=gel.Pos(",")  ;
+	if(d)
+   {
+		Parcala=AnsiMidStr(gel , d+1 , gel.Length());
+		d=Parcala.Pos(",") ;
+		gel=AnsiMidStr(Parcala , d , Parcala.Length());
+		Parcala=AnsiLeftStr(Parcala,d-1);
+	}
+	return Parcala;
+}
+
+
+void OdaEkle(AnsiString Data)
+{
+	AnsiString Aranan,Parcala;
+	int d;
+	Aranan="<var n='";
+	d=Data.Pos(Aranan);
+	if(!d)
+		return ;
+	Parcala=AnsiMidStr(Data , d+Aranan.Length() , Data.Length());
+	d= Parcala.Pos("'");
+	AnsiString OdaNo=AnsiLeftStr(Parcala,d-1);
+	Aranan="' t='s'>";
+	d= Parcala.Pos(Aranan);
+	Parcala=AnsiMidStr(Parcala , d+Aranan.Length() , Parcala.Length());
+	d=Parcala.Pos(",");
+	AnsiString OdaIsim=AnsiLeftStr(Parcala,d-1);
+	OdaNo=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	AnsiString Oturan=OdaAyir (Parcala);
+	AnsiString MinPot=OdaAyir (Parcala);
+	AnsiString MaxPot=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	AnsiString MaxPara=OdaAyir (Parcala);
+	AnsiString MaxKul=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	AnsiString OdaTip=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	Aranan=OdaAyir (Parcala);
+	//Aranan=OdaAyir (Parcala);
+	AnsiString MinPara=OdaAyir (Parcala);
+	memset(&OdaListeEkle,0,sizeof(OdaListe));
+	strcpy(OdaListeEkle.OdaIsmi,OdaIsim.c_str());
+	OdaListeEkle.OdaNo=OdaNo.ToIntDef(0);
+	OdaListeEkle.MaxOtur= Oturan.ToIntDef(0);
+	OdaListeEkle.MinPot=MinPot.ToIntDef(0);
+	OdaListeEkle.MaxPot=MaxPot.ToIntDef(0);
+	OdaListeEkle.MaxPara= MaxPara.ToIntDef(0);
+	OdaListeEkle.MinPara= MinPara.ToIntDef(0);
+	if(Form2->CheckBox1->Checked )
+	{
+		Form2->MasaList->Items->Add(Utf8ToAnsi(OdaListeEkle.OdaIsmi)+"%"+OdaNo);
+	}
+	if(OdaTip=="normal")
+	{
+		OdaListeEkle.OdaTip=1;
+	}
+	else
+	{
+		return;
+	}
+	OdaListesi.push_back(OdaListeEkle);
+}
+
+void OdaDuzenle()
+{
+	AnsiString gel=Odalar;
+	//Form1->MasaListNo->Items->Clear();
+	Form1->MasaList->Items->Clear();
+	AnsiString Parcala  ;
+	OdaListesi.clear();
+	AnsiString Aranan="<obj o='rooms' t='a'>";
+	int 	d=gel.Pos(Aranan)  ;
+	if(d)
+	{
+		Parcala=AnsiMidStr(gel , d+Aranan.Length() , gel.Length());
+	}
+	for(;;)
+	{
+		int Pl;
+		d=Parcala.Pos("</var>") ;
+		if(!d)
+		{
+			break;
+		}
+		UID=AnsiLeftStr(Parcala,d+5);
+		Pl=  Parcala.Length();
+		Parcala=AnsiMidStr(Parcala,d+6,Parcala.Length());
+		OdaEkle(UID);
+	 }
+}

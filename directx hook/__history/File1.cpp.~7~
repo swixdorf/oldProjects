@@ -1,0 +1,410 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#include <windows.h>
+#include <tlhelp32.h>
+#include <math.h>
+float sqrtf(const float f)
+{
+__asm {
+fld f
+fsqrt
+fstp f
+}
+return f;
+}
+#include "C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\d3d9.h"
+#include "C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\d3dx9.h"
+#pragma hdrstop
+
+#pragma argsused
+//=====================================================================================
+LPDIRECT3DDEVICE9 my_Interface;
+const DWORD cdxDevice = 0x00ADA640;
+DWORD orj_cDevice=0;
+	LPD3DXFONT font01;
+typedef HRESULT (WINAPI* CreateDevice_Prototype)        (LPDIRECT3D9, UINT, D3DDEVTYPE, HWND, DWORD, D3DPRESENT_PARAMETERS*, LPDIRECT3DDEVICE9*);
+typedef HRESULT (WINAPI* Reset_Prototype)               (LPDIRECT3DDEVICE9, D3DPRESENT_PARAMETERS*);
+typedef HRESULT (WINAPI* EndScene_Prototype)            (LPDIRECT3DDEVICE9);
+typedef HRESULT (WINAPI* DrawIndexedPrimitive_Prototype)(LPDIRECT3DDEVICE9, D3DPRIMITIVETYPE, INT, UINT, UINT, UINT, UINT);
+
+CreateDevice_Prototype         CreateDevice_Pointer         = NULL;
+Reset_Prototype                Reset_Pointer                = NULL;
+EndScene_Prototype             EndScene_Pointer             = NULL;
+DrawIndexedPrimitive_Prototype DrawIndexedPrimitive_Pointer = NULL;
+
+HRESULT WINAPI Direct3DCreate9_VMTable    (VOID);
+HRESULT WINAPI CreateDevice_Detour        (LPDIRECT3D9, UINT, D3DDEVTYPE, HWND, DWORD, D3DPRESENT_PARAMETERS*, LPDIRECT3DDEVICE9*);
+HRESULT WINAPI Reset_Detour               (LPDIRECT3DDEVICE9, D3DPRESENT_PARAMETERS*);
+HRESULT WINAPI EndScene_Detour            (LPDIRECT3DDEVICE9);
+HRESULT WINAPI DrawIndexedPrimitive_Detour(LPDIRECT3DDEVICE9, D3DPRIMITIVETYPE, INT, UINT, UINT, UINT, UINT);
+
+DWORD WINAPI VirtualMethodTableRepatchingLoopToCounterExtensionRepatching(LPVOID);
+PDWORD Direct3D_VMTable = NULL;
+
+//=====================================================================================
+HRESULT WINAPI Direct3DCreate9_VMTable(VOID)
+{
+   // ShowMessage("dx create");
+  LPDIRECT3D9 Direct3D_Object;// = Direct3DCreate9(D3D_SDK_VERSION);
+__asm{
+	push D3D_SDK_VERSION
+	mov eax,orj_cDevice
+	call eax
+	mov Direct3D_Object,eax
+
+}
+  if(Direct3D_Object == NULL)
+  return D3DERR_INVALIDCALL;
+  
+  Direct3D_VMTable = (PDWORD)*(PDWORD)Direct3D_Object;
+  Direct3D_Object->Release();
+
+  DWORD dwProtect;
+
+  if(VirtualProtect(&Direct3D_VMTable[16], sizeof(DWORD), PAGE_READWRITE, &dwProtect) != 0)
+  {
+    *(PDWORD)&CreateDevice_Pointer = Direct3D_VMTable[16];
+    *(PDWORD)&Direct3D_VMTable[16] = (DWORD)CreateDevice_Detour;
+
+    if(VirtualProtect(&Direct3D_VMTable[16], sizeof(DWORD), dwProtect, &dwProtect) == 0)
+    return D3DERR_INVALIDCALL;
+  }
+  else
+  return D3DERR_INVALIDCALL;
+
+  return D3D_OK;
+}
+
+//=====================================================================================
+
+HRESULT WINAPI CreateDevice_Detour(LPDIRECT3D9 Direct3D_Object, UINT Adapter, D3DDEVTYPE DeviceType, HWND FocusWindow,
+					DWORD BehaviorFlags, D3DPRESENT_PARAMETERS* PresentationParameters,
+					LPDIRECT3DDEVICE9* Returned_Device_Interface)
+{
+  PresentationParameters->BackBufferWidth = 400;
+  PresentationParameters->BackBufferHeight = 300;
+  PresentationParameters->SwapEffect		= D3DSWAPEFFECT_DISCARD;
+  HRESULT Returned_Result = CreateDevice_Pointer(Direct3D_Object, Adapter, DeviceType, FocusWindow, BehaviorFlags,
+											  PresentationParameters, Returned_Device_Interface);
+  DWORD dwProtect;
+  if(VirtualProtect(&Direct3D_VMTable[16], sizeof(DWORD), PAGE_READWRITE, &dwProtect) != 0)
+  {
+    *(PDWORD)&Direct3D_VMTable[16] = *(PDWORD)&CreateDevice_Pointer;
+    CreateDevice_Pointer           = NULL;
+
+    if(VirtualProtect(&Direct3D_VMTable[16], sizeof(DWORD), dwProtect, &dwProtect) == 0)
+    return D3DERR_INVALIDCALL;
+  }
+  else
+  return D3DERR_INVALIDCALL;
+
+  if(Returned_Result == D3D_OK)
+  {
+    Direct3D_VMTable = (PDWORD)*(PDWORD)*Returned_Device_Interface;
+
+	*(PDWORD)&Reset_Pointer                = (DWORD)Direct3D_VMTable[16];
+	*(PDWORD)&EndScene_Pointer             = (DWORD)Direct3D_VMTable[42];
+	*(PDWORD)&DrawIndexedPrimitive_Pointer = (DWORD)Direct3D_VMTable[82];
+
+
+	if(CreateThread(NULL, 0, VirtualMethodTableRepatchingLoopToCounterExtensionRepatching, NULL, 0, NULL) == NULL)
+	return D3DERR_INVALIDCALL;
+  }
+  return Returned_Result;
+}
+
+//=====================================================================================
+
+HRESULT WINAPI Reset_Detour(LPDIRECT3DDEVICE9 Device_Interface, D3DPRESENT_PARAMETERS* PresentationParameters)
+{
+  return Reset_Pointer(Device_Interface, PresentationParameters);
+}
+
+//=====================================================================================
+
+HRESULT WINAPI EndScene_Detour(LPDIRECT3DDEVICE9 Device_Interface)
+{
+/* D3DVIEWPORT9 viewP;
+	Device_Interface->GetViewport( &viewP );
+    DWORD ScreenCenterX = viewP.Width / 2;
+    DWORD ScreenCenterY = viewP.Height / 2;
+ 
+    D3DRECT rec4 = {ScreenCenterX-35, ScreenCenterY, ScreenCenterX+ 35, ScreenCenterY+1};
+    D3DRECT rec5 = {ScreenCenterX, ScreenCenterY-35, ScreenCenterX+ 1,ScreenCenterY+35};  
+	Device_Interface->Clear( 1, &rec4, D3DCLEAR_TARGET, D3DCOLOR(0.62745098, 0.125490, 0.959999, 1.0), 0,  0 );//purple
+	Device_Interface->Clear( 1, &rec5, D3DCLEAR_TARGET, D3DCOLOR(0.62745098, 0.125490, 0.959999, 1.0), 0,  0 );
+ 
+    D3DRECT rec6 = {ScreenCenterX-30, ScreenCenterY, ScreenCenterX+ 30, ScreenCenterY+1};
+    D3DRECT rec7 = {ScreenCenterX, ScreenCenterY-30, ScreenCenterX+ 1,ScreenCenterY+30};  
+	Device_Interface->Clear( 1, &rec6, D3DCLEAR_TARGET, D3DCOLOR(0.0, 0.0, 1.0, 1.0), 0,  0 );//blue
+	Device_Interface->Clear( 1, &rec7, D3DCLEAR_TARGET, D3DCOLOR(0.0, 0.0, 1.0, 1.0), 0,  0 );
+ 
+    D3DRECT rec8 = {ScreenCenterX-25, ScreenCenterY, ScreenCenterX+ 25, ScreenCenterY+1};
+	D3DRECT rec9 = {ScreenCenterX, ScreenCenterY-25, ScreenCenterX+ 1,ScreenCenterY+25};
+	Device_Interface->Clear( 1, &rec8, D3DCLEAR_TARGET, D3DCOLOR(0.0, 1.0, 1.0, 1.0), 0,  0 );//cyan
+	Device_Interface->Clear( 1, &rec9, D3DCLEAR_TARGET, D3DCOLOR(0.0, 1.0, 1.0, 1.0), 0,  0 );
+
+    D3DRECT rec10 = {ScreenCenterX-20, ScreenCenterY, ScreenCenterX+ 20, ScreenCenterY+1};
+    D3DRECT rec11 = {ScreenCenterX, ScreenCenterY-20, ScreenCenterX+ 1,ScreenCenterY+20};  
+	Device_Interface->Clear( 1, &rec10, D3DCLEAR_TARGET, D3DCOLOR(0.0, 1.0, 0.0, 1.0), 0,  0 );// green
+	Device_Interface->Clear( 1, &rec11, D3DCLEAR_TARGET, D3DCOLOR(0.0, 1.0, 0.0, 1.0), 0,  0 );
+ 
+    D3DRECT rec12 = {ScreenCenterX-15, ScreenCenterY, ScreenCenterX+ 15, ScreenCenterY+1};
+    D3DRECT rec13 = {ScreenCenterX, ScreenCenterY-15, ScreenCenterX+ 1,ScreenCenterY+15};  
+	Device_Interface->Clear( 1, &rec12, D3DCLEAR_TARGET, D3DCOLOR(1.0, 1.0, 0.0, 1.0), 0,  0 );// yellow
+	Device_Interface->Clear( 1, &rec13, D3DCLEAR_TARGET, D3DCOLOR(1.0, 1.0, 0.0, 1.0), 0,  0 );
+
+	D3DRECT rec14 = {ScreenCenterX-10, ScreenCenterY, ScreenCenterX+ 10, ScreenCenterY+1};
+	D3DRECT rec15 = {ScreenCenterX, ScreenCenterY-10, ScreenCenterX+ 1,ScreenCenterY+10};
+	Device_Interface->Clear( 1, &rec14, D3DCLEAR_TARGET, D3DCOLOR(1.0, 0.549019608, 0.0, 1.0), 0,  0 );// orange
+	Device_Interface->Clear( 1, &rec15, D3DCLEAR_TARGET, D3DCOLOR(1.0, 0.549019608, 0.0, 1.0), 0,  0 );
+ 
+    D3DRECT rec16 = {ScreenCenterX-5, ScreenCenterY, ScreenCenterX+ 5, ScreenCenterY+1};
+	D3DRECT rec17 = {ScreenCenterX, ScreenCenterY-5, ScreenCenterX+ 1,ScreenCenterY+5};
+	Device_Interface->Clear( 1, &rec16, D3DCLEAR_TARGET, D3DCOLOR(1.0, 0.0, 0.0, 1.0), 0,  0 );//red
+	Device_Interface->Clear( 1, &rec17, D3DCLEAR_TARGET, D3DCOLOR(1.0, 0.0, 0.0, 1.0), 0,  0 );
+
+		D3DXCreateFont(Device_Interface,20,0,FW_NORMAL,1,FALSE,DEFAULT_CHARSET,OUT_DEFAULT_PRECIS,DEFAULT_QUALITY,DEFAULT_PITCH||FF_DONTCARE,"Courier New",&font01);
+	static RECT textbox ;
+	SetRect(&textbox,0,0,640,480);
+	font01->DrawTextA(NULL,"HELLOOOO",22,&textbox,DT_CENTER||DT_VCENTER,D3DCOLOR_ARGB(255,255,255,255));  */
+	//Device_Interface->GetTransform()
+	if (GetKeyState(VK_F8)) {
+	 Device_Interface->Clear(0,NULL,D3DCLEAR_TARGET,D3DCOLOR_XRGB(135,100,70),1.0f,0);
+	}
+//Device_Interface->Clear(0,NULL,D3DCLEAR_TARGET,D3DCOLOR_XRGB(135,100,70),1.0f,0);
+  return EndScene_Pointer(Device_Interface);
+}
+
+//=====================================================================================
+
+HRESULT WINAPI DrawIndexedPrimitive_Detour(LPDIRECT3DDEVICE9 Device_Interface, D3DPRIMITIVETYPE Type, INT BaseIndex,
+										   UINT MinIndex, UINT NumVertices, UINT StartIndex, UINT PrimitiveCount)
+{
+  LPDIRECT3DVERTEXBUFFER9 Stream_Data;
+  UINT Offset = 0;
+  UINT Stride = 0;
+
+  if(Device_Interface->GetStreamSource(0, &Stream_Data, &Offset, &Stride) == D3D_OK)
+  Stream_Data->Release();
+
+  if(Stride == 0)
+  {
+  }
+
+  return DrawIndexedPrimitive_Pointer(Device_Interface, Type, BaseIndex, MinIndex, NumVertices, StartIndex, PrimitiveCount);
+}
+
+//=====================================================================================
+
+DWORD WINAPI VirtualMethodTableRepatchingLoopToCounterExtensionRepatching(LPVOID Param)
+{
+  UNREFERENCED_PARAMETER(Param); 
+
+  while(1)
+  {
+    Sleep(100);
+
+	*(PDWORD)&Direct3D_VMTable[16] = (DWORD)Reset_Detour;
+	*(PDWORD)&Direct3D_VMTable[42] = (DWORD)EndScene_Detour;
+    *(PDWORD)&Direct3D_VMTable[82] = (DWORD)DrawIndexedPrimitive_Detour;
+  }
+
+  return 1;
+}
+
+//=====================================================================================
+
+const DWORD Kontrol=0x0092B65E;//ok
+const DWORD KotrolDeger=0x92a99068;
+const DWORD KODEVAM= 0x0092B734;//ok
+const HSDCALL   =0x00A16A08;
+const DWORD fakeHsAddr = 0x00D86BA8;//ok
+const DWORD KO_HWND = 	0x00C21944;
+BYTE ORJCODE[10];
+DWORD my_tid;
+WINAPI fakeHSCALL(DWORD a,DWORD b,DWORD c)
+{
+	return 1;
+}
+BOOL ListProcessThreadsSuspend( DWORD dwOwnerPID ,DWORD DontSuspendtid,bool SuspendMainThread)
+{
+	HANDLE hThreadSnap = INVALID_HANDLE_VALUE;
+	THREADENTRY32 te32;
+	hThreadSnap = CreateToolhelp32Snapshot( TH32CS_SNAPTHREAD, 0 );
+	if( hThreadSnap == INVALID_HANDLE_VALUE )
+		return( FALSE );
+	te32.dwSize = sizeof(THREADENTRY32 );
+	if( !Thread32First( hThreadSnap, &te32 ) )
+	{
+		CloseHandle( hThreadSnap );     // Must clean up the snapshot object!
+		return( FALSE );
+	}
+	do
+	{
+	if( te32.th32OwnerProcessID == dwOwnerPID )
+	{
+		DWORD thid=GetCurrentThreadId() ;
+		if(thid!= te32.th32ThreadID)
+		{
+			HANDLE thHandle=OpenThread(2,0,te32.th32ThreadID) ;
+			DWORD tid = 0;//GetThreadId(thHandle);
+			if (DontSuspendtid!=tid)
+			{
+				SuspendThread(thHandle);
+			}
+			CloseHandle( hThreadSnap );
+		}
+
+	}
+	}
+	while( Thread32Next(hThreadSnap, &te32 ) );
+	CloseHandle( hThreadSnap );
+	return( TRUE );
+}
+
+BOOL ListProcessThreadsResume( DWORD dwOwnerPID )
+{
+	HANDLE hThreadSnap = INVALID_HANDLE_VALUE;
+	THREADENTRY32 te32;
+	hThreadSnap = CreateToolhelp32Snapshot( TH32CS_SNAPTHREAD, 0 );
+	if( hThreadSnap == INVALID_HANDLE_VALUE )
+		return( FALSE );
+	te32.dwSize = sizeof(THREADENTRY32 );
+	if( !Thread32First( hThreadSnap, &te32 ) )
+	{
+		CloseHandle( hThreadSnap );     // Must clean up the snapshot object!
+		return( FALSE );
+	}
+	do
+	{
+		if( te32.th32OwnerProcessID == dwOwnerPID )
+		{
+			DWORD thid=GetCurrentThreadId() ;
+			if(thid!= te32.th32ThreadID)
+			{
+				HANDLE thHandle=OpenThread(2,0,te32.th32ThreadID) ;
+				ResumeThread(thHandle);
+				CloseHandle( hThreadSnap );
+			}
+		}
+	} while( Thread32Next(hThreadSnap, &te32 ) );
+	CloseHandle( hThreadSnap );
+	return( TRUE );
+}
+
+void __fastcall duzelt()
+{
+	memcpy((void*)Kontrol,ORJCODE,10);
+}
+
+int WINAPI hshs(long lParam)
+{
+Sleep(7000);
+while (1){
+asm{
+	mov eax,0x449540
+	call eax
+	 fstp    [0xD79E3C]
+}
+Sleep(2000);
+}
+}
+int mult ;
+__declspec(naked)dondon()
+{
+	asm
+	{
+		pushad
+		call duzelt
+		popad
+		mov eax,KODEVAM
+		mov [esp+0],eax
+		RET
+	}
+}
+
+bool baypas()
+
+{
+		Don:
+	Sleep(20);
+	if (*(DWORD*)(Kontrol)!=KotrolDeger)
+	{
+		goto Don;
+	}
+
+	ListProcessThreadsSuspend(GetCurrentProcessId(),my_tid,0);
+		//DisableThreadLibraryCalls(hinstModule);
+		orj_cDevice  = *(DWORD*)cdxDevice;
+		//*(DWORD*)cdxDevice = (DWORD)swxCreateDevice;
+		if(Direct3DCreate9_VMTable() != D3D_OK)
+			ShowMessage("DxHookError");
+
+	char tmp[25];
+	memset(tmp,0,25);
+	Sleep(2000);
+
+
+	CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)hshs,NULL,0,0);
+	*(BYTE*)(0x00A16432) 	=  0xb8;
+	*(DWORD*)(0x00A16432+1) =  0x201;
+	*(BYTE*)(0x00A16432+5) 	=  0xc3;
+		//memset(name,0,MAX_PATH);
+		//GetModuleFileNameA(0,name,MAX_PATH);
+		memcpy(ORJCODE,(void*)Kontrol,10);
+		DWORD d=(DWORD)dondon;
+		d=(d-Kontrol);
+		d-=5;
+		*(BYTE*)Kontrol  = 0xe8;
+		*(DWORD*)(Kontrol+1)=d;
+
+		asm
+		{
+			mov eax, offset fakeHSCALL
+			mov ds:ds:fakeHsAddr,eax
+		}
+
+	ListProcessThreadsResume(GetCurrentProcessId());
+	return 0;
+}
+int WINAPI myThread(){
+my_tid = GetCurrentThreadId();
+		baypas();
+	   HWND	hGameHWND = (HWND)*(DWORD*)KO_HWND;
+SetWindowPos(hGameHWND,0,0,0,500,400,NULL);
+
+}
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
+{
+
+	switch (dwReason)
+	{
+	case DLL_PROCESS_ATTACH:
+
+CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)myThread,NULL,0,0);
+
+	 break;
+
+
+	case DLL_THREAD_ATTACH:  	break;
+	case DLL_THREAD_DETACH:    	break;
+	case DLL_PROCESS_DETACH:   	
+	  /*if(Form1!=0)
+	  {
+	  SetEvent(CikisEvent);
+
+	  Cikis=0;
+	  Sleep(2000);
+
+
+	  }      */
+	  break;
+
+	}
+
+    return TRUE;
+}
+
+//---------------------------------------------------------------------------

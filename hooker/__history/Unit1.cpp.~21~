@@ -1,0 +1,258 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+#include "winsock.h"
+#include "Unit1.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm1 *Form1;
+//---------------------------------------------------------------------------
+#define WM_SOCKETMSG WM_USER+1
+WNDPROC dwGameWndProc;
+const DWORD RecvCall   = 0x0091B860;//ok
+const DWORD Recvc_0	=	0x47D440;
+const DWORD Recvc_1	=	0x00A2BCFE;// 00A28C1C
+const DWORD Recvc_2	=	0x461650;
+const DWORD KO_DLGA =	0x00D7FD74;
+const DWORD KO_SDFX = 	0x00D7FE0C;
+const DWORD KO_INDX =	0x0047D440;
+const DWORD KO_HWND = 	0x00C27944;
+HWND hGameHWND;
+BYTE aGelenCode[100];
+BYTE GelenCode[2048];
+	 AnsiString BufferToHex(char *buf,int size)
+{
+	String str;
+	for(int i=0;i<size;i++)
+	{
+		BYTE a=buf[i];
+		str+="0x"+IntToHex(a,2)+",";
+	}
+	return str;
+	}
+
+
+DWORD IndexAl( DWORD *IndexNe)
+{
+
+
+
+asm{
+
+
+
+				push    IndexNe
+				push    4
+				push    KO_SDFX
+				push    1
+			   mov eax,KO_INDX
+				call eax
+				add     esp, 10h
+
+}
+
+}
+
+bool __stdcall ProcessRecv(DWORD DataPack,int &iOffset)
+{
+
+DWORD IndexNe[8];
+
+IndexAl(&IndexNe[0]);
+DWORD retaddr=IndexNe[0];
+//ShowMessage(ECX);
+DWORD dwProcessAddr =0;
+asm{
+mov eax,0x00AFB5D0
+mov eax,DS:[EAX+8+retaddr*4]
+/*
+mov     ecx, ds:0x00D7FD60
+mov     edx, retaddr
+
+mov     eax, [ecx+edx*4+24h]  */
+
+mov    dwProcessAddr ,eax
+}
+	int iSize = *(DWORD*)(DataPack + 4);
+	char *pBuf = (char*)*(DWORD*)(DataPack + 8);
+	BYTE *GelenBuf = pBuf;
+
+
+
+
+Form1->Memo2->Lines->Add(BufferToHex(GelenBuf,iSize));
+
+RETN:
+	__asm
+	{
+		PUSH iOffset
+		PUSH DataPack
+		MOV ECX,[KO_DLGA]
+		MOV EAX,dwProcessAddr
+		CALL EAX
+	}
+
+	////////////////// test
+  /*	if(dwNPCInID)
+	{
+		pTmpNPC = _CArea.GetNPCBase(dwNPCInID);
+		if( pTmpNPC.GetBase() > 0 )
+		{
+			pTmpNPC.SetDWORD(KO_CHST,0);
+		}
+	}          */
+	///////////////////
+
+	/*if(frmBot->bSaveCPU)
+	{
+		if(GetTickCount() - frmBot->lRecvLastSleep >= (DWORD)frmBot->iSleepRatio)
+		{
+			Sleep(frmBot->iSleepRatio);
+			frmBot->lRecvLastSleep = GetTickCount();
+		}
+	}   */
+
+	return true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DWORD calladresgelen;
+GelenHazirla()
+{
+memset(aGelenCode,90,100);
+memset(GelenCode,90,2048);
+  memcpy(GelenCode,(void*)(DWORD)RecvCall  ,2048);
+
+  DWORD Adress=(DWORD)&GelenCode[0x2a];
+  DWORD caldeger=((DWORD)Recvc_0-Adress)-5;
+  Adress++;
+ *(DWORD*)Adress=caldeger;
+
+Adress=(DWORD)&GelenCode[0x6a];
+caldeger=((DWORD)Recvc_1-Adress)-5;
+  Adress++;
+ *(DWORD*)Adress=caldeger;
+
+Adress=(DWORD)&GelenCode[0x83];
+caldeger=((DWORD)Recvc_1-Adress)-5;
+  Adress++;
+ *(DWORD*)Adress=caldeger;
+
+
+ Adress=(DWORD)&GelenCode[0x105];
+caldeger=((DWORD)Recvc_2-Adress)-5;
+  Adress++;
+ *(DWORD*)Adress=caldeger;
+
+ Adress=(DWORD)&GelenCode[0x16a];
+caldeger=((DWORD)Recvc_1-Adress)-5;
+  Adress++;
+ *(DWORD*)Adress=caldeger;
+
+
+  Adress=(DWORD)&GelenCode[0x183];
+caldeger=((DWORD)Recvc_1-Adress)-5;
+  Adress++;
+ *(DWORD*)Adress=caldeger;
+
+BYTE *gelenyolla=&GelenCode[0xdb];
+memset(gelenyolla,0x90,10);
+gelenyolla[0]=0xb8;
+*(DWORD*)&gelenyolla[1]=(DWORD)ProcessRecv;
+
+
+gelenyolla=&GelenCode[0x1a3];
+memset(gelenyolla,0x90,10);
+gelenyolla[0]=0xb8;
+*(DWORD*)&gelenyolla[1]=(DWORD)ProcessRecv;
+
+calladresgelen=(DWORD)&GelenCode[0];
+
+}
+
+ LRESULT CALLBACK VirtualWndProc(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
+{
+bool bSendMessageToGame = true;
+	switch (uMsg)
+	{
+
+
+		case WM_SOCKETMSG:{
+		switch (WSAGETSELECTEVENT(lParam)) {
+		case FD_CLOSE:break;
+		case FD_READ:
+		{
+			DWORD a = 0x48DC60 ; //1822
+			asm{
+			mov     ecx, ds:0x00D7FD40
+			test    ecx, ecx
+			jz      endd
+
+			call    a
+			mov eax,calladresgelen/// 	comolokko
+			call eax
+			endd:
+			}
+			bSendMessageToGame=false ;
+		}break;
+
+		default:
+			;
+		}
+		}break;
+		default:
+
+		break;
+	}
+
+if(bSendMessageToGame)
+CallWindowProcA((FARPROC)dwGameWndProc,hwnd,uMsg,wParam,lParam);
+
+}
+
+
+__fastcall TForm1::TForm1(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button1Click(TObject *Sender)
+{
+   /*	while( !hGameHWND )
+	{
+		hGameHWND = (HWND)*(DWORD*)KO_HWND;
+		Sleep(500);
+	}
+	dwGameWndProc = (WNDPROC)GetWindowLongPtr(hGameHWND,GWLP_WNDPROC);
+	GelenHazirla();
+
+	SetWindowLongPtr(hGameHWND,GWLP_WNDPROC,(DWORD)&VirtualWndProc);
+	ShowMessage(IntToHex((int)calladresgelen,8));
+	GelenHazirla();
+	ShowMessage(IntToHex((int)calladresgelen,8)); */
+memset((void*)(RecvCall+0xdb),0x90,10);
+*(BYTE*)(RecvCall+0xdb)=0xb8;
+*(DWORD*)(RecvCall+0xdb+1)=(DWORD)ProcessRecv;
+
+
+memset((void*)(RecvCall+0x1a3),0x90,10);
+*(BYTE*)(RecvCall+0x1a3)=0xb8;
+*(DWORD*)(RecvCall+0x1a3+1)=(DWORD)ProcessRecv;
+}
+//---------------------------------------------------------------------------

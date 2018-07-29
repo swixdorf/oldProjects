@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2013.01.21 05:44:35.434.cpp,C:\Users\swixdorf\Documents\RAD Studio\Projects\Unit1.cpp=C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessclient\Unit1.cpp</Transaction>
+    <Transaction>2013.01.21 05:44:35.434.h,C:\Users\swixdorf\Documents\RAD Studio\Projects\Unit1.h=C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessclient\Unit1.h</Transaction>
+    <Transaction>2013.01.21 05:44:35.434.dfm,C:\Users\swixdorf\Documents\RAD Studio\Projects\Unit1.dfm=C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessclient\Unit1.dfm</Transaction>
+    <Transaction>2013.01.21 05:44:40.584.cbproj,C:\Users\swixdorf\Documents\RAD Studio\Projects\Project1.cbproj=C:\Users\swixdorf\Documents\RAD Studio\Projects\client.cbproj</Transaction>
+    <Transaction>2013.01.22 02:29:18.246.cbproj,C:\Users\swixdorf\Documents\RAD Studio\Projects\client.cbproj=C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessclient\client.cbproj</Transaction>
+    <Transaction>2013.02.20 20:13:10.477.cbproj,C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessclient\client.cbproj=C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessclient\d.cbproj</Transaction>
+    <Transaction>2013.02.20 20:13:42.927.cbproj,C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessclient\d.cbproj=C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessclient\client.cbproj</Transaction>
+    <Transaction>2013.03.13 12:37:38.057.cbproj,C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessclient\client.cbproj=C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessclient\burak.cbproj</Transaction>
+    <Transaction>2013.03.13 12:37:41.463.cbproj,C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessclient\burak.cbproj=C:\Users\swixdorf\Documents\RAD Studio\Projects\clientlessclient\client.cbproj</Transaction>
+  </Transactions>
+</BorlandProject>

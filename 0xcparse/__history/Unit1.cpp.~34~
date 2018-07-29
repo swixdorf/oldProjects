@@ -1,0 +1,109 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "Unit1.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm1 *Form1;
+//---------------------------------------------------------------------------
+__fastcall TForm1::TForm1(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+stringtobuffer(String buf,BYTE *kod){
+memset(kod,0,1024);
+int len  = buf.Length()/2;
+for (int i = 0; i < len; i++) {
+kod[i]=StrToInt("0x"+buf.SubString(i*2+1,2));
+}
+
+}
+
+void __fastcall TForm1::Button1Click(TObject *Sender)
+{
+
+
+ListBox1->Items->LoadFromFile("in.txt");
+BYTE GelenBuf[1024];
+for (int i = 0; i < ListBox1->Items->Count; i++)
+{
+if (ListBox1->Items->Strings[i].SubString(1,4)!="0C01"){
+
+}else{
+stringtobuffer(ListBox1->Items->Strings[i],&GelenBuf[0]);
+int Yer=3;
+int Yer2;
+char charname[100];
+memset(charname,0,100);
+BYTE Level[3];
+BYTE Class[3];
+Yer+=GelenBuf[Yer];
+Class[0]=GelenBuf[Yer+3];
+Level[0]=GelenBuf[Yer+5];
+Yer+=60;
+Yer+=GelenBuf[Yer];
+Class[1]=GelenBuf[Yer+3];
+Level[1]=GelenBuf[Yer+5];
+Yer+=60;
+Yer+=GelenBuf[Yer];
+Class[2]=GelenBuf[Yer+3];
+Level[2]=GelenBuf[Yer+5];
+String Buf = ListBox1->Items->Strings[i-1];
+
+	Buf+=":"+IntToStr(Class[0]);
+	Buf+=","+IntToStr(Level[0]);
+	Buf+="("+IntToStr(Class[1]);
+	Buf+=")"+IntToStr(Level[1]);
+	Buf+="["+IntToStr(Class[2]);
+	Buf+="]"+IntToStr(Level[2]);
+/*ListBox2->Items->Add(ListBox1->Items->Strings[i-1]);
+String a = IntToStr(Level[0])+"-"+IntToStr(Level[1])+"-"+IntToStr(Level[2]);    */
+if ((Level[0]<50&&Level[1]<50&&Level[2]<50)&&(Level[0]>34||Level[1]>34||Level[2]>34)) {
+if (ListBox2->Items->IndexOf(Buf)==-1) {
+ListBox2->Items->Add(Buf);
+}
+}else{
+
+String Buf2= ListBox1->Items->Strings[i-1].SubString(1,ListBox1->Items->Strings[i-1].AnsiPos("=")-1);
+if (ListBox3->Items->IndexOf(Buf2)==-1) {
+ListBox3->Items->Add(Buf2);
+}
+}
+
+}
+
+}
+
+ListBox2->Items->SaveToFile("out.txt");
+}
+
+//---------------------------------------------------------------------------
+
+
+
+
+void __fastcall TForm1::Button2Click(TObject *Sender)
+{
+for (int j = 0; j < ListBox2->Items->Count; j++) {
+bool var = false;
+for (int i = 0; i < ListBox3->Items->Count; i++) {
+
+Application->ProcessMessages();
+	if (ListBox2->Items->Strings[j].AnsiPos(ListBox3->Items->Strings[i])!=0) {
+	var = true;
+	}
+}
+if (!var) {
+    ListBox4->Items->Add(ListBox2->Items->Strings[j]);
+}
+}
+ListBox2->Items->SaveToFile("out.txt");
+ListBox3->Items->SaveToFile("out2.txt");
+ListBox4->Items->SaveToFile("out3.txt");
+}
+//---------------------------------------------------------------------------
+

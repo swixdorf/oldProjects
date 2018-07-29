@@ -1,0 +1,44 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{8bfc9a59-449b-4ab3-9eb5-cd235696ceb1}</ProjectGuid>
+  </PropertyGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Projects Include="mesajpoker.cbproj" />
+    <Projects Include="poker server\Server.cbproj" />
+  </ItemGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Default.Personality</Borland.Personality>
+    <Borland.ProjectType />
+    <BorlandProject>
+  <BorlandProject xmlns=""> <Default.Personality> </Default.Personality> </BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Target Name="mesajpoker">
+    <MSBuild Projects="mesajpoker.cbproj" Targets="" />
+  </Target>
+  <Target Name="mesajpoker:Clean">
+    <MSBuild Projects="mesajpoker.cbproj" Targets="Clean" />
+  </Target>
+  <Target Name="mesajpoker:Make">
+    <MSBuild Projects="mesajpoker.cbproj" Targets="Make" />
+  </Target>
+  <Target Name="Server">
+    <MSBuild Projects="poker server\Server.cbproj" Targets="" />
+  </Target>
+  <Target Name="Server:Clean">
+    <MSBuild Projects="poker server\Server.cbproj" Targets="Clean" />
+  </Target>
+  <Target Name="Server:Make">
+    <MSBuild Projects="poker server\Server.cbproj" Targets="Make" />
+  </Target>
+  <Target Name="Build">
+    <CallTarget Targets="mesajpoker;Server" />
+  </Target>
+  <Target Name="Clean">
+    <CallTarget Targets="mesajpoker:Clean;Server:Clean" />
+  </Target>
+  <Target Name="Make">
+    <CallTarget Targets="mesajpoker:Make;Server:Make" />
+  </Target>
+  <Import Condition="Exists('$(MSBuildBinPath)\Borland.Group.Targets')" Project="$(MSBuildBinPath)\Borland.Group.Targets" />
+</Project>
